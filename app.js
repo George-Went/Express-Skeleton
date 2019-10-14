@@ -36,10 +36,11 @@ app.use(function(req, res, next) {
 // Extra Functions 
 // -- basic page display 
 app.get('/hello', function(req, res){
-  res.send("Howdy 3000!");
+  res.send("Howdy yall!");
 });
 
 //add error handling 
+
 
 
 //add logging (if not using pre-existing logging packages)

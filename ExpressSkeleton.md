@@ -1,13 +1,5 @@
 
-# Node 
-Node is a server-side platform build on javascript (specifically googles javascript V8 engine). 
 
-Node is designed to build fast and scalable applications that run in real time. Node also works with a variety of pre-existing and node specific libraries. 
-
-> Node.js = Runtime environment (engine) + javascript libraries 
-
-**Note:** 
-Javascript was desig
 # Node 
 Node is a server-side platform build on javascript (specifically googles javascript V8 engine). 
 
@@ -344,7 +336,7 @@ module.exports = router;
 ## Views / Templates 
 Templating engines are used to remove HTML code clutter when generating or auto-generating pages. One of the most commonly used templating languages is Pug, formally known as Jade. 
 
-> **Note**: Pug was formally known as Jade, some tutorials online still refer to it as such.
+> **Note:** Pug was formally known as Jade, some tutorials online still refer to it as such.
 
 **Installing Pug** 
 Pug can be installed using the node package manager 
@@ -355,10 +347,14 @@ npm install --save pug
 **Setting the templating engine**
 To use a templating engine, two functions are needed. One to set nodes view engine to the correct templating package, and one to show the templating engine where our templates are stored. 
 
-```app.js```
+**Adding a template engine** ```app.js```
 ```javascript
 app.set('view engine', 'pug'); //Sets template engine to pug
 app.set('views', path.join(__dirname, 'views'));  //shows template engine where templates are
 ```
 
-> **Note** 
+> **Note:** 
+>```app.set('views', path.join(__dirname, 'views'))``` is the same as typing in the directory for views manually i.e. ```app.set('views', '/views')```
+
+The above code allows for pug to use templates that are stored in ```/views```
+

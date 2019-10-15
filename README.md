@@ -396,3 +396,29 @@ app.use(cookieParser());
 //Note that this needs to go before adding your own routes 
 ```
 
+### Error Handeling 
+Error handeling is one of the last things to do before exporting the app. 404 pages are one of the most common issues, where a user is directed towards a route or file where a user exists. 
+
+The addition of the http-errors package allows for a easy way to detect different types of errors and execute a function 
+
+```javascript
+// 404 catch
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+```
+
+You can also add error handling and logging for developers only, specifically when they start on a local system using ```npm devstart``` 
+
+```javascript
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+```

@@ -272,6 +272,7 @@ var app = require('../app'); //imports the app.js
 
 This is the main ‘starting point’ for the application and is where most of the work happens, by convention its called app, similar to ‘main’ files in other programs. 
 
+### Imports 
 The first part of an app.js file is concerned with the node libraries and can be used to import npm packages such as express (needed for express applications suprisingly) among other node libraries such as http-errors, morgan and cookie-parser. 
 
 ```javascript
@@ -290,21 +291,21 @@ var usersRouter = require('./routes/users');
 ```
 > **Note:** At this point we have *imported* the modules, we havent used them or the functions within them at this point.
 
+### Generation 
 Once we have imported all of our own libraries and modules we can then generate the application.
 
 ```javascript 
 var app = express(); // defines the express libraries as app
 ```
 
-Next, we set up the view (template) engine from the imprted express modules. There are two parts to setting up the engine, showing where the templates are stored within the application directory structure and then specifying what template library is being used (For this example project it is ```pug```)
+### Middleware 
+Adding middleware such as templating and error handeling can be done by utilising the ```app.set``` function to point to a directory, and the ```app.use``` function to use a imported middleware funciton or route.  
 
-```javascript 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
-```
+### Routes 
 
-Afterwards, adding middleware
+### Error Handling 
 
+### Exporting the final product
 
 
 
@@ -315,10 +316,10 @@ While you can set up routes (as well the entire site) within the app.js file (li
 
 In Express routing functions are defined by ```app.method(path,handler)```
 
-The example routing files in the skeleton project above, ```index.js``` and ```users.js``` are examples of 
+The example routing files in the skeleton project above, ```index.js``` and ```example.js``` are examples of 
 
 **Creating a basic routing file** 
-```./routes/users.js```
+```./routes/example.js```
 ```javascript
 var express = require('express');  //imports express libraries 
 var router = express.Router();     //defines express.router as router
@@ -331,7 +332,7 @@ router.get('/', function(req, res, next) {
 //export this router to use in our app.js
 module.exports = router;
 ```
-> The above code defines a route so that when a user visits ( ```/users``` ) **plus** the defined route in the above file ( ```/``` ). In other words this means that when a user visits ( ```/users/``` ) they will recive the above resource.  
+> The above code defines a route so that when a user visits ( ```/example``` ) **plus** the defined route in the above file ( ```/``` ). In other words this means that when a user visits ( ```/example/``` ) they will recive the above resource.  
 
 ## Views / Templates 
 Templating engines are used to remove HTML code clutter when generating or auto-generating pages. One of the most commonly used templating languages is Pug, formally known as Jade. 
@@ -358,3 +359,39 @@ app.set('views', path.join(__dirname, 'views'));  //shows template engine where 
 
 The above code allows for pug to use templates that are stored in ```/views```
 
+As well as specifying the template engine, you also have to make sure that the express "```.app```" can find and then use public files, such as images, javascript and most importantly for our templates, css stylesheets. This can be solved by allowing the app to use files that are stored under ```/public```, in a similar fashion to allowing the app to access third party middleware. 
+
+```javascript
+
+app.use(express.static(path.join(__dirname, './public')));
+
+```
+> Note - This code needs to be placed after added routes, otherwise the new files cant access ```/public```
+
+## Third Party Middleware and Error Handeling 
+One of the main advantages of node is that it allows third party libraries to be easily linked into the application.
+
+
+As an example, common third party packages include: 
+
+* **cookie-parser:** Used to parse the cookie header and populate req.cookies (essentially provides a convenient method for accessing cookie information).
+* **debug:** A tiny node debugging utility modeled after node core's debugging technique.
+* **morgan:** An HTTP request logger middleware for node.
+* **http-errors:** Create HTTP errors where needed (for express error handling).
+
+you can install these packages using 
+```
+npm install --save cookie-parser morgan debug http-errors
+```
+> **Note** You can see in ```package.json``` that the packages have been added to the "dependancies". 
+
+> **Note** If your using a pre-built node application, you can install all the relevent dependancies by using ```npm install```.
+
+### Importing the dependacies 
+We can import our packages into the ```app.js``` express application in the same way that routes are imported. 
+
+```javascript
+app.use(logger('dev'));
+app.use(cookieParser());
+//Note that this needs to go before adding your own routes 
+```

@@ -1,7 +1,10 @@
 
+//Importing 
 var createError = require('http-errors') 
-var express = require('express'); //importing the express dependancies
+var express = require('express'); 
 var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
 
 
 //Import routes 
@@ -12,14 +15,24 @@ var exampleRouter = require('./routes/example');
 //generate express application  
 var app = express();
 
-//view engine setup
+//Setting up Middleware 
+
+  // Views / Templates 
 app.set('views', path.join(__dirname, 'views')); 
 app.set('view engine', 'pug');
 
+  // Third party packages 
+app.use(logger('dev'));
+
+  //accessing /public
+app.use(express.static(path.join(__dirname, './public')));
+
+  //Routes 
 app.use('/', indexRouter);
 app.use('/example', exampleRouter);
 app.use('/users', usersRouter);
-app.use(express.static(path.join(__dirname, './public')));
+
+
 
 
 

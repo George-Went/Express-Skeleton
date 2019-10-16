@@ -40,7 +40,7 @@ app.use('/users', usersRouter);
 // Extra Functions (igonre)
 // -- basic page display 
 app.get('/hello', function(req, res){
-  res.send("Howdy yall!");
+  res.render("test.html");
 });
 // -------
 

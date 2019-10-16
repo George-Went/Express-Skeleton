@@ -232,7 +232,7 @@ npm run devstart
 ``` 
 
 
-## Setting up the file structure
+# File Structure
 The basic file structure of the project is similar to a normal website directory structure, with routing and view templates in seperate directories.
 
 ```
@@ -309,7 +309,25 @@ Adding middleware such as templating and error handeling can be done by utilisin
 
 
 
-## Routing 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Routing 
 Web frameworks provide resources such as HTML pages, scripts, images, etc. at different routes.
 
 While you can set up routes (as well the entire site) within the app.js file (like most helloworld programs in node), it's better practice to use a specific routing directories to organise your sites structure.
@@ -318,7 +336,7 @@ In Express routing functions are defined by ```app.method(path,handler)```
 
 The example routing files in the skeleton project above, ```index.js``` and ```example.js``` are examples of 
 
-**Creating a basic routing file** 
+## Creating a basic routing file 
 ```./routes/example.js```
 ```javascript
 var express = require('express');  //imports express libraries 
@@ -334,8 +352,100 @@ module.exports = router;
 ```
 > The above code defines a route so that when a user visits ( ```/example``` ) **plus** the defined route in the above file ( ```/``` ). In other words this means that when a user visits ( ```/example/``` ) they will recive the above resource.  
 
+
+## Changing data based on URL Parameters  
+One of the most common ways applications communicate data between backend and frontend systems is by parsing data transmitted through the URL, known as URL encoding.
+
+Another major part of sites is being able to generate route handlers automatically, such as dashboards for induvidual users.
+
+URL parameters can be set up by putting a colon before a router. For example, having a ```router.get('/Library/:Book', function(req,res)```  means that ```:Book``` will be interpreted as data and not as a destination.
+
+An example of how paramaters can work with both node and the pug template structure: 
+
+```/routes/index.js```
+```javascript
+router.get('/:name/:address', function(req,res) {
+   var name = req.params.name;
+   var address = req.params.address;
+   res.render('index', {title: name, address: address});
+});
+```
+
+```views/index.pug```
+```pug 
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{name}
+  p Adress: #{address}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Views / Templates 
-Templating engines are used to remove HTML code clutter when generating or auto-generating pages. One of the most commonly used templating languages is Pug, formally known as Jade. 
+
+
+One of the main issues with node is that writing HTML and CSS code directly into a javascript ```.get``` function is that it can be hard to tell when the js ends and the HTML begins. 
+
+Templating engines are used to remove HTML code clutter when generating or auto-generating pages, if you have a HTML page that has a generated dev based on the result of a .js file var, congratulations thats technically a templating engine. 
+
+In short, a templating engine can turn this:
+
+
+```javascript
+app.get('/', function(req, res){ //GET request for express 
+   res.send("<html><head> <title>Index</title></head><body><h1>Hello World!</h1></body></html>"); // When a GET request is recived, send text
+});
+```
+into this
+
+```index.pug```
+```pug
+doctype html
+html
+   head 
+      title Index
+   body 
+      h1 Hello world!
+```
+
+One of the most commonly used templating languages is Pug, formally known as Jade. 
 
 > **Note:** Pug was formally known as Jade, some tutorials online still refer to it as such.
 

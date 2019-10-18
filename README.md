@@ -618,3 +618,13 @@ This generates a .vagrant file in the project that contains the infomation used 
 
 #### Boot up and Connection 
 To boot up the VM, use ```vagrant up```
+To connect to the VM, use ```vagrant ssh```
+
+You are now using a bash shell script in another virtual computer
+
+If the current VM does not have the most up to date software, we can use ```do-release-upgrade``` to update the version of the vagrent box to the latest version released.
+
+Another issue is that in some boxes, software that is normally on linux systems can be 'stuck' at version 1.0, below is a list of commands to update the software: 
+
+pip (python packages): ```curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py```
+

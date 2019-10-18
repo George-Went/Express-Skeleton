@@ -90,6 +90,28 @@ server.listen(port, hostname, () => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### Running the Program 
 #### Executing the script manually
 The most basic way to run a node program is to execute the script manually
@@ -164,6 +186,23 @@ app.get('/', function(req, res){ //GET request for express
 
 app.listen(3000); // server listens on port 3000
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Basic Express Skeleton Setup 
 
@@ -538,3 +577,44 @@ app.use(function(err, req, res, next) {
 
 
 
+
+
+
+
+
+# MongoDB
+
+# Vagrant 
+Vagrant allows for virtualization of linux systems within a computer, allowing for projects to work within their own containerized environment (basically it means that you know what dependencies are installed onto a system) 
+
+## Installation 
+Download the vagrant packages from the [vagrant website](https://www.vagrantup.com/downloads.html) and move the files to your preffered directory location (if you dont know where this, a good starting location is /opt)
+
+Add vagrant to the PATH using ```Export PATH=$PATH:/opt/vagrant```
+
+### What is PATH?
+PATH allows vagrant to be run from various projects, without having to find / import the executibles into the project first. Programs that are stored in the path directories (like ```/usr/bin```) can be accessed anywhere. 
+
+This means that you can use the “vagrant” cmd anywhere on your linux system. 
+> To add the program permanently (on ubuntu), add the path to ```/etc/environment``` by modifying the file, adding ```:/opt/vagrant``` to the end of file (inside the quotation marks).
+
+### Installing a Virtulisation Software 
+To use vagrant, a pre-esixting virtulisation software needs to be installed. In our case, we can use virtualbox a common virtulisation software.
+
+```
+sudo apt-get install virtualbox
+```
+
+### Setting up a Vagrant VM 
+One of the great things about vagrant is the ability to pull pre-existing, user generated repos of common operating systems to virtulise, these are known as vagrant boxes
+
+In the project file use:
+```
+vagrant init hasicorp/prescise64
+//or for a more updated ubuntu build, use 
+vagrant init ubuntu/trusty64
+```
+This generates a .vagrant file in the project that contains the infomation used to set up the vm in the future - similar to a .git file
+
+#### Boot up and Connection 
+To boot up the VM, use ```vagrant up```

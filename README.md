@@ -626,5 +626,29 @@ If the current VM does not have the most up to date software, we can use ```do-r
 
 Another issue is that in some boxes, software that is normally on linux systems can be 'stuck' at version 1.0, below is a list of commands to update the software: 
 
-pip (python packages): ```curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py```
+* pip (python packages): ```curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py```
+
+
+
+One of the cool things about vagrant VM's is that any file that is stored in the same project directory that that .vagrant file is in, is accessable within the VM under the ```/vagrant``` directory.  
+
+#### Outside Connections 
+Vagrant will not normally allow outside connections to the VM withoug going through proper channles (ssh / http access). This can be an issue if you want to use the VM to act as a LAMP stack or a database host.
+
+This can be changed in the Vagrantfile, located in the directory you set up the vagrant VM in 
+```
+#config.vm.network "private_network", ip: "192.168.33.10" 
+to 
+config.vm.network "private_network", ip: "192.168.33.10" 
+```
+However even though we can now ping the vm, we still can access it via mysql, this is due to the firewall not allowing us through 
+
+Port forwarding vagrant to allow communication with own computer / database 
+
+
+
+Default mysql port is 3306
+Deafult Mongo port is 27017
+
+Once we have done this, we can connect to the mysql server but are denied access to the root account, we can get around this by creating a new user and giving him permissions
 

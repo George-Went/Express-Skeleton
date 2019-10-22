@@ -673,6 +673,11 @@ This is due to the vm failing to port forward its ssh port (2222), while vagrant
 
 ```
 
+One of the main things to know is that vagrant runs ontop of virtualbox, if you have vagrant, you will have virtualbox. If we open up the virtualbox GUI, we can see the VM's that have currently been created. One of the main issues with multiple vm's ruinning is the fact that sometimes ports can collide, leading to vm's being unable to connect to either public or private networks.
+
+> **Note:** To decomission a vagrant VM you must use ```vagrant destroy``` to remove the VM and any possibility that it could cause port collisions. 
+
+
 Default mysql port is 3306
 Deafult Mongo port is 27017
 

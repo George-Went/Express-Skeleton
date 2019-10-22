@@ -592,6 +592,8 @@ Download the vagrant packages from the [vagrant website](https://www.vagrantup.c
 
 Add vagrant to the PATH using ```Export PATH=$PATH:/opt/vagrant```
 
+> **Note** You can commonly run across issues if vagrant is not updated, if this happens, simply download thje latest version of vagrant and unzip the file in the same location as the old version of vagrant (```/opt/vagrant```). You can check the version of vagrant using ```vagrant version```
+
 ### What is PATH?
 PATH allows vagrant to be run from various projects, without having to find / import the executibles into the project first. Programs that are stored in the path directories (like ```/usr/bin```) can be accessed anywhere. 
 
@@ -612,7 +614,7 @@ In the project file use:
 ```
 vagrant init hasicorp/prescise64
 //or for a more updated ubuntu build, use 
-vagrant init ubuntu/trusty64
+vagrant init ubuntu/xenial64
 ```
 This generates a .vagrant file in the project that contains the infomation used to set up the vm in the future - similar to a .git file
 
@@ -632,6 +634,19 @@ Another issue is that in some boxes, software that is normally on linux systems 
 
 One of the cool things about vagrant VM's is that any file that is stored in the same project directory that that .vagrant file is in, is accessable within the VM under the ```/vagrant``` directory.  
 
+ > **Common Vagrant Commands**  
+    ```destroy```:        stops and deletes all traces of the vagrant machine  
+    ```status ```:        outputs status Vagrant environment  
+    ```halt   ```:        stops the vagrant machine  
+    ```help   ```:        shows the help for a subcommand  
+    ```init   ```:        initializes a new Vagrant environment by creating a Vagrantfile  
+    ```reload ```:        restarts vagrant machine, loads new Vagrantfile configuration  
+    ```resume ```:        resume a suspended vagrant machine  
+    ```ssh    ```:        connects to machine via SSH  
+    ```up     ```:        starts and provisions the vagrant environment  
+
+
+
 #### Outside Connections 
 Vagrant will not normally allow outside connections to the VM withoug going through proper channles (ssh / http access). This can be an issue if you want to use the VM to act as a LAMP stack or a database host.
 
@@ -645,7 +660,18 @@ However even though we can now ping the vm, we still can access it via mysql, th
 
 Port forwarding vagrant to allow communication with own computer / database 
 
+#### Issues i've run into 
+> VM hangs on ```ssh auth method``` on bootup  
+This is due to the vm failing to port forward its ssh port (2222), while vagrant usually automatically port forwards the ssh port, this can sometimes fail. To solve this issue, we need to add the port forwarding manually into the Vagrantfile.
+```ruby
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # NOTE: This will enable public access to the opened port
+  # config.vm.network "forwarded_port", guest: 80, host: 8080
+    config.vm.network "forwarded_port", guest: 22, host: 2222, host_ip: "127.0.0.1", id: 'ssh'
 
+```
 
 Default mysql port is 3306
 Deafult Mongo port is 27017

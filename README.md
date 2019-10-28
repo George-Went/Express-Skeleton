@@ -582,7 +582,6 @@ app.use(function(err, req, res, next) {
 
 
 
-# MongoDB
 
 # Vagrant 
 Vagrant allows for virtualization of linux systems within a computer, allowing for projects to work within their own containerized environment (basically it means that you know what dependencies are installed onto a system) 
@@ -623,6 +622,8 @@ To boot up the VM, use ```vagrant up```
 To connect to the VM, use ```vagrant ssh```
 
 You are now using a bash shell script in another virtual computer
+
+Default vagrant boxes are usually set up with a vagrant and the root account by default. You can access the root account using ```- su``` but you will first need to set a password usign ```sudo passwd root```. 
 
 If the current VM does not have the most up to date software, we can use ```do-release-upgrade``` to update the version of the vagrent box to the latest version released.
 
@@ -683,3 +684,80 @@ Deafult Mongo port is 27017
 
 Once we have done this, we can connect to the mysql server but are denied access to the root account, we can get around this by creating a new user and giving him permissions
 
+
+
+
+
+
+
+
+
+
+
+# Setting up the server 
+
+**Access the Root account** 
+```ssh root@serverip```
+add another user to the account for database usage
+```adduser user```
+```usermod -aG sudo user```
+
+Adding a firewall to allow limited access to the server 
+**Note:** Uncomplicated FireWall (UFW) is installed by default on ubuntu but may need to be installed on other systems.
+Check application list 
+```ufw app list```
+
+Make sure that ssh connections are allowed 
+```ufw allow OpenSSH```
+
+**Enable the firewall**
+```ufw enable -y```
+
+```ufw status``` to see what apps are allowed 
+You should be able to see the active ssh connections that are allowed, and also  
+
+Enabeling access for regular users 
+If the Root account uses a password, you can normally access the account using ```ssh user@server_address```
+
+# MongoBD
+
+**Installation of MongoDB**
+
+While MongoDB is included in ubuntu/rhel linux repositories, the most updated files can be found in the latest updated repositories.  
+```sudo apt update```   
+
+Now we can install the MongoDB Packages   
+```sudo apt-get install -y mongodb```  
+
+MongoDB installs automatically and will set up a database. You can check using:   
+```sudo systemctl status mongodb```
+
+You should be able to see: 
+```bash 
+Output
+● mongodb.service - An object/document-oriented database
+   Loaded: loaded (/lib/systemd/system/mongodb.service; enabled; vendor preset: enabled)
+   Active: active (running) since Sat 2018-05-26 07:48:04 UTC; 2min 17s ago
+     Docs: man:mongod(1)
+ Main PID: 2312 (mongod)
+    Tasks: 23 (limit: 1153)
+   CGroup: /system.slice/mongodb.service
+           └─2312 /usr/bin/mongod --unixSocketPrefix=/run/mongodb --config /etc/mongodb.conf
+
+```  
+
+If the database hasnt been able to start, you can start it using:    
+```sudo systemctl start mongodb```
+
+**Adjusting Firewall Options**
+Even Though the MongoDB server has been set up, it will still only be accessable locally and will not be acceable from other systems.
+
+To allow access to the MongoDB database from anywhere on the internet:  
+```sudo ufw allow 27017``` 
+
+This is however not usually a good option as it opens up the database to the *entire internet*.   
+
+A much better way to access the database is to allow the server hosting you application access, then have that open to the internet instead:  
+```sudo ufw allow from <other server IP>/32 to any port 27012```
+
+You can then verify your new port access with ```sudo status ufw```

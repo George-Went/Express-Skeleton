@@ -761,3 +761,17 @@ A much better way to access the database is to allow the server hosting you appl
 ```sudo ufw allow from <other server IP>/32 to any port 27012```
 
 You can then verify your new port access with ```sudo status ufw```
+
+You should now be able to see what has access to what ports:
+```bash
+Status: active
+
+To                         Action      From
+--                         ------      ----
+OpenSSH                    ALLOW       Anywhere
+27017                      ALLOW       Anywhere
+OpenSSH (v6)               ALLOW       Anywhere (v6)
+27017 (v6)                 ALLOW       Anywhere (v6)
+
+```
+

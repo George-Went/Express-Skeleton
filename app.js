@@ -15,6 +15,23 @@ var exampleRouter = require('./routes/example');
 //generate express application  
 var app = express();
 
+app.get('/', function(req, res){
+  res.send('Hello World');
+})
+
+app.listen(3000, function(){
+  console.log('server started on prt 3000')
+})
+
+
+
+
+
+
+
+
+
+
 //Setting up Middleware 
 
   // Views / Templates 
@@ -28,7 +45,7 @@ app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, './public')));
 
 //Routes 
-app.use('/', indexRouter);
+//app.use('/', indexRouter);
 app.use('/example', exampleRouter);
 app.use('/users', usersRouter);
 

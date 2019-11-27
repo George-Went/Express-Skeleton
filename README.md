@@ -696,21 +696,28 @@ Once we have done this, we can connect to the mysql server but are denied access
 
 # Setting up the server 
 
-**Access the Root account** 
-```ssh root@serverip```
-add another user to the account for database usage
+>**Note:** This isnt needed on vagrant systems, but make sure to at least have a firewall on production systems.
+
+Access the Root account    
+```ssh root@serverip```  
+
+Add another user to the account for database usage  
 ```adduser user```
+
+Give a user sudo access (root / superuser)  
 ```usermod -aG sudo user```
 
-Adding a firewall to allow limited access to the server 
-**Note:** Uncomplicated FireWall (UFW) is installed by default on ubuntu but may need to be installed on other systems.
+
+Adding a firewall to allow limited access to the server   
+>**Note:** Uncomplicated FireWall (ufw) is installed by default on ubuntu but may need to be installed on other systems.  
+
 Check application list 
-```ufw app list```
+```ufw app list```  
 
 Make sure that ssh connections are allowed 
 ```ufw allow OpenSSH```
 
-**Enable the firewall**
+## Enable the firewall 
 ```ufw enable -y```
 
 ```ufw status``` to see what apps are allowed 
@@ -721,18 +728,42 @@ If the Root account uses a password, you can normally access the account using `
 
 # MongoBD
 
-**Installation of MongoDB**
+Mongodb is a NoSQL database that stores data in JSON like (Javascript Object Notation).
 
-While MongoDB is included in ubuntu/rhel linux repositories, the most updated files can be found in the latest updated repositories.  
+
+
+
+**Adding MongoDB Repositories (Depends on system)**
+Depending on the version / distro of linux, MongoDB may not be in the package manger that we are using, if this is the case you will usually get an error stating that "the package is not avalible" or that it "is referanced by another package". 
+
+In this case we can install the official mongodb repository and install the packages from there. 
+
+First we have to import the GPG keys for the mongodb server
+```sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927```
+
+After this we can import the mongodb repository details so ```apt``` will know where the packages can be downloaded from. 
+
+```echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list```
+
+after adding the repository details, we can finish off with making sure that all the packages in the repository are up to date.
+
+```sudo apt-get update```
+
+## Installation of MongoDB
+
+While MongoDB is included in the latest ubuntu/rhel linux repositories, the most updated files can be found in the latest updated repositories.  
 ```sudo apt update```   
 
 Now we can install the MongoDB Packages   
 ```sudo apt-get install -y mongodb```  
 
-MongoDB installs automatically and will set up a database. You can check using:   
+You can start the process using 
+```sudo systemctl start mongodb```
+
+You can check that the process is running using:   
 ```sudo systemctl status mongodb```
 
-You should be able to see: 
+If the Process is running, you should be able to see: 
 ```bash 
 Output
 ● mongodb.service - An object/document-oriented database
@@ -749,10 +780,43 @@ Output
 If the database hasnt been able to start, you can start it using:    
 ```sudo systemctl start mongodb```
 
+### Issues I've run into  
+
+**Failed with result "exit code" / error 100**
+```
+● mongodb.service - An object/document-oriented database
+   Loaded: loaded (/lib/systemd/system/mongodb.service; enabled; vendor preset: enabled)
+   Active: failed (Result: exit-code) since Mon 2019-11-25 10:11:32 GMT; 1 day 23h ago
+     Docs: man:mongod(1)
+  Process: 9500 ExecStart=/usr/bin/mongod --unixSocketPrefix=${SOCKETPATH} --config ${CONF} $DAEMON_OPTS (code=exited, sta
+ Main PID: 9500 (code=exited, status=100)
+Failed with result 'exit-code'.
+```
+This is due to the 
+
+
+If all else fails:  
+**Uninstalling Mongodb**  
+
+```bash
+sudo service mongod stop
+sudo apt remove mongodb
+sudo apt purge mongodb
+sudo apt autoremove
+```
+If you get isses stating that mongodb-org dependancies are not met, you first need to remove the mongodb-org packages as well (using the same commands as above).
+
+
+
+
+
+
+
+
 **Adjusting Firewall Options**
 Even Though the MongoDB server has been set up, it will still only be accessable locally and will not be acceable from other systems.
 
-To allow access to the MongoDB database from anywhere on the internet:  
+To allow access to the MongoDB database from anywhere on the internet: 
 ```sudo ufw allow 27017``` 
 
 This is however not usually a good option as it opens up the database to the *entire internet*.   
@@ -774,4 +838,6 @@ OpenSSH (v6)               ALLOW       Anywhere (v6)
 27017 (v6)                 ALLOW       Anywhere (v6)
 
 ```
+
+
 

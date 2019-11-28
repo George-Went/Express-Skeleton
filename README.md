@@ -370,10 +370,69 @@ html
       h2 #{title}
 ```
 
+### Layouts
 One of the main things you may have noticed if you set up two routes with pug files attached is that they have a lot of the same code in the pug file. One of the ways we can organise our designs is through the usage of **layouts**.
 
 We can create a file called ```layout.pug``` to put some of the basic html/pug code that is used in all of our pages.
 
+```layout.pug```
+```
+doctype html
+html
+   head
+      title Library
+   body
+      block content
+      br
+      hr
+      footer
+         p Footer 
+```
+
+To use this view file in other .pug files, we can use ```extends.layout```  
+The ```block content``` within the layout pug code is an imporant part, as its where we can specify other views to import their code In the ```index.pug``` file we created earlier, we can remove all of the html code except for our titles so that it looks like this:  
+```
+extends layout
+
+block content
+   h2 #{title}
+```
+
+### Displaying Variable Data
+We can also add control structures such as if statments and loops. 
+
+While most data from websites come from databases, for the moment, we can replicate this data by just having a static array of data in a route.
+
+```javascript
+// Book List Route
+app.get('/books', function(req, res){
+  let books = [ // We create an array called "books"
+    {
+      id: 1,
+      title: "Book 1",
+      author: "Gwent went",
+      body: "Star Platinum"
+    },
+    {
+      id: 2,
+      title: "Book 2",
+      author: "Gwent went",
+      body: "Joe mama"
+    },
+    {
+      id: 3,
+      title: "Book 3",
+      author: "joestar",
+      body: "AYAYAYAYA"
+    },
+  ]
+  res.render('index', {
+    title: 'Hello'
+  });
+});s
+```
+
+We can use this array as a set of example data that we can display.
 
 
 
@@ -390,6 +449,13 @@ We can create a file called ```layout.pug``` to put some of the basic html/pug c
 
 
 
+
+
+
+
+
+
+# Old stuff
 
 
 

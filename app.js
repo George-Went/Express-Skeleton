@@ -18,6 +18,36 @@ app.get('/', function(req, res){
   });
 });
 
+// Book List Route
+app.get('/books', function(req, res){
+  let books = [ // We create an array called "books"
+    {
+      id: 1,
+      title: "Book 1",
+      author: "Gwent went",
+      body: "Star Platinum"
+    },
+    {
+      id: 2,
+      title: "Book 2",
+      author: "Gwent went",
+      body: "Joe mama"
+    },
+    {
+      id: 3,
+      title: "Book 3",
+      author: "joestar",
+      body: "AYAYAYAYA"
+    },
+  ]
+  //Respons with a render of the infomation
+  res.render('books', {
+    title: 'List of Books',
+    books: books // "books" value is the "books" array
+  });
+});
+
+
 // Add Route
 app.get('/book/add', function(req, res){
   res.render('add_book', {

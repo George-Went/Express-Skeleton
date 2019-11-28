@@ -337,7 +337,7 @@ app.get('/', function(req, res){
 ```
 Your ```views.pug``` file can look like:
 
-```
+```pug
 doctype html
 html
    head
@@ -360,7 +360,7 @@ app.get('/book/add', function(req, res){
 add a new pug file called ```add_book.pug```
 >**Note**  
 Make sure the file name is the same as the name that is called in the ```res.render()``` route - if the files are not called the same value, the server will "fail to lookup view ```filename```"
-```
+```pug
 doctype html
 html
    head
@@ -376,7 +376,7 @@ One of the main things you may have noticed if you set up two routes with pug fi
 We can create a file called ```layout.pug``` to put some of the basic html/pug code that is used in all of our pages.
 
 ```layout.pug```
-```
+```pug
 doctype html
 html
    head
@@ -399,7 +399,7 @@ block content
 ```
 
 ### Displaying Variable Data
-We can also add control structures such as if statments and loops. 
+We can also add control structures such as **if statments** and **loops**. 
 
 While most data from websites come from databases, for the moment, we can replicate this data by just having a static array of data in a route.
 
@@ -426,13 +426,32 @@ app.get('/books', function(req, res){
       body: "AYAYAYAYA"
     },
   ]
-  res.render('index', {
-    title: 'Hello'
+  //Respons with a render of the infomation
+  res.render('books', {
+    title: 'List of Books',
+    books: books // "books" value is the "books" array
   });
-});s
+});
 ```
 
-We can use this array as a set of example data that we can display.
+We can use this array as a set of example data that we can display using a pug file:  
+
+```pug
+extends layout
+
+block content
+   h1 #{title}              
+   ul
+      each book, i in books 
+         li= book.title     
+```
+The above pug file ```books.pug```   works as such:  
+- The ```layout.pug``` file is included, allowing for a header and a footer.    
+- The ```block content``` is used, meaning that any indented code within the tag is impoted into the ```layout.pug``` ```content``` block.  
+- The Header title is parsed from the response ```render(title: List of Books)```  
+- the ```ul`` tag defines an unordered list - meaning instead of numbers, bullet points are used.  
+- The each (for) loop means that for each ```book``` in the array ```books```, the page will render the ```book.title``` in a **list** (```li```)  
+- The array is parsed into the ```books.pug``` file using ```render(books.books)```, this means that the variable books will render the unorderd list in the ```books.pug``` file.  
 
 
 

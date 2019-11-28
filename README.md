@@ -265,21 +265,134 @@ Pug can be installed using the node package manager
 npm install --save pug 
 ```
 
-**Setting the templating engine**
-To use a templating engine, two functions are needed. One to set nodes view engine to the correct templating package, and one to show the templating engine where our templates are stored. 
 
-**Adding a template engine** 
+## Utilising View Engines
 
-```app.js```
+### Setting up a views directory 
+While we can save our pug code into the root directory of the program at the same level as app.js. This could create problems if we wanted to create a larger program with multiple views, our file structure would be incredebly messy.  
+To solve this we can create a ```/views``` directory to store our pug files.
+
+We can use the npm module ```path``` to then allow our app to know where the pug files are. 
+
+```javascript
+var path = require('path'); 
+```
+
+### Setting the Templating Engine  
+To use a templating engine, two functions are needed. 
+One to set nodes view engine to the correct templating package
+One to show the templating engine where our templates are stored. 
+
+
+**Adding a template engine**   
+
 ```javascript
 app.set('view engine', 'pug'); //Sets template engine to pug
 app.set('views', path.join(__dirname, 'views'));  //shows template engine where templates are
 ```
 
-> **Note:** 
->```app.set('views', path.join(__dirname, 'views'))``` is the same as typing in the directory for views manually i.e. ```app.set('views', '/views')```
+> **Note:**  
+>```app.set('views', path.join(__dirname, 'views'))```   
+is the same as typing in the directory for views manually i.e.  
+  ```app.set('views', '/views')```
 
 The above code allows for pug to use templates that are stored in ```/views```
+
+
+## Pug Files
+Pug uses indentation instead of brackets as a way to organise HTML.
+You can either use spaces or tabs, but make sure to be consistant in yoiur usage of either - you cant use both in the same file.
+
+```html
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Library</title>
+   </head>
+   <body>
+      <h1>Books</h1>
+   </body>
+</html>
+```
+In pug would be:
+
+```pug
+doctype html
+html
+   head
+      title Library
+   body
+      h1 Books
+```
+
+You can also use variables in pug to allow for templated files, for example:
+
+```javascript
+// Home Route
+app.get('/', function(req, res){
+  res.render('index', {
+    title: 'Hello' // variable set - titles value is "Hello"
+  });
+});
+```
+Your ```views.pug``` file can look like:
+
+```
+doctype html
+html
+   head
+      title Library
+   body
+      h1 Books
+      h2 #{title}
+```
+
+We can also use the code in this pug file to create a completly new route in ```app.js```: 
+
+```javascript
+// Add Route
+app.get('/book/add', function(req, res){
+  res.render('add_book', {
+    title:'Add Book'
+  })
+});
+```
+add a new pug file called ```add_book.pug```
+>**Note**  
+Make sure the file name is the same as the name that is called in the ```res.render()``` route - if the files are not called the same value, the server will "fail to lookup view ```filename```"
+```
+doctype html
+html
+   head
+      title Library
+   body
+      h1 Books
+      h2 #{title}
+```
+
+One of the main things you may have noticed if you set up two routes with pug files attached is that they have a lot of the same code in the pug file. One of the ways we can organise our designs is through the usage of **layouts**.
+
+We can create a file called ```layout.pug``` to put some of the basic html/pug code that is used in all of our pages.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 As well as specifying the template engine, you also have to make sure that the express "```.app```" can find and then use public files, such as images, javascript and most importantly for our templates, css stylesheets. This can be solved by allowing the app to use files that are stored under ```/public```, in a similar fashion to allowing the app to access third party middleware. 
 
@@ -289,6 +402,7 @@ app.use(express.static(path.join(__dirname, './public')));
 
 ```
 > Note - This code needs to be placed after added routes, otherwise the new files cant access ```/public```
+```
 doctype html
 html
    head 

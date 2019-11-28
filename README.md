@@ -210,9 +210,92 @@ app.listen(3000); // server listens on port 3000
 # Express - Setting up a simple Server 
 To get started with expess, we can set up a simple server that hosts a web page displaying the text "Hello world"
 
+```app.js```
+```javascript
+var express = require('express'); //app.js requires Express
+
+//Initilise app 
+var app = express();
+
+// Home Route 
+app.get('/', function(req, res){
+  res.send('Hello World');
+});
+//When a GET function is recived, the application will send the response (in this case "Hello world")
 
 
+//This will detect any port 3000 traffic and respond with the function defined (in this case, the console prints out the string)
+app.listen(3000, function(){
+  console.log('server started on port 3000')
+});
 
+```
+
+# Templating Engines
+
+One of the main issues with node is that writing HTML and CSS code directly into a javascript ```.get``` function is that it can be hard to tell when the js ends and the HTML begins. 
+
+Templating engines are used to remove HTML code clutter when generating or auto-generating pages, if you have a HTML page that has a generated dev based on the result of a .js file var, congratulations thats technically a templating engine. 
+
+In short, a templating engine can turn this:
+
+
+```javascript
+app.get('/', function(req, res){ //GET request for express 
+   res.send("<html><head> <title>Index</title></head><body><h1>Hello World!</h1></body></html>"); // When a GET request is recived, send text
+});
+```
+into this
+
+```index.pug```
+```pug
+doctype html
+html
+   head 
+      title Index
+   body 
+      h1 Hello world!
+```
+
+> **Note:** Pug was formally known as Jade, some tutorials online still refer to it as such.
+
+**Installing Pug** 
+Pug can be installed using the node package manager 
+```
+npm install --save pug 
+```
+
+**Setting the templating engine**
+To use a templating engine, two functions are needed. One to set nodes view engine to the correct templating package, and one to show the templating engine where our templates are stored. 
+
+**Adding a template engine** 
+
+```app.js```
+```javascript
+app.set('view engine', 'pug'); //Sets template engine to pug
+app.set('views', path.join(__dirname, 'views'));  //shows template engine where templates are
+```
+
+> **Note:** 
+>```app.set('views', path.join(__dirname, 'views'))``` is the same as typing in the directory for views manually i.e. ```app.set('views', '/views')```
+
+The above code allows for pug to use templates that are stored in ```/views```
+
+As well as specifying the template engine, you also have to make sure that the express "```.app```" can find and then use public files, such as images, javascript and most importantly for our templates, css stylesheets. This can be solved by allowing the app to use files that are stored under ```/public```, in a similar fashion to allowing the app to access third party middleware. 
+
+```javascript
+
+app.use(express.static(path.join(__dirname, './public')));
+
+```
+> Note - This code needs to be placed after added routes, otherwise the new files cant access ```/public```
+doctype html
+html
+   head 
+      title Index
+   body 
+      h1 Hello world!
+```
 
 
 
@@ -444,58 +527,7 @@ An example of how paramaters can work with both node and the pug template struct
 router.get('/:name/:address', function(req,res) {
    var name = req.params.name;
    var address = req.params.address;
-   res.render('index', {title: name, address: address});
-});
-```
-
-```views/index.pug```
-```pug 
-extends layout
-
-block content
-  h1= title
-  p Welcome to #{name}
-  p Adress: #{address}
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Views / Templates 
+   res.render('index', {title: name, address## Views / Templates 
 
 
 One of the main issues with node is that writing HTML and CSS code directly into a javascript ```.get``` function is that it can be hard to tell when the js ends and the HTML begins. 
@@ -553,7 +585,58 @@ As well as specifying the template engine, you also have to make sure that the e
 app.use(express.static(path.join(__dirname, './public')));
 
 ```
-> Note - This code needs to be placed after added routes, otherwise the new files cant access ```/public```
+> Note - This code needs to be placed after added routes, otherwise the new files cant access ```/public```: address});
+});
+```
+
+```views/index.pug```
+```pug 
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{name}
+  p Adress: #{address}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Third Party Middleware and Error Handeling 
 One of the main advantages of node is that it allows third party libraries to be easily linked into the application.

@@ -904,6 +904,8 @@ Mongodb is a NoSQL database that stores data in JSON like (Javascript Object Not
 
 ## Installation of MongoDB  
 
+>**Note:** Most of this guide comes from https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/ 
+
 **Adding MongoDB Repositories (Depends on system)**
 Depending on the version / distro of linux, MongoDB may not be in the package manger that we are using, if this is the case you will usually get an error stating that "the package is not avalible" or that it "is referanced by another package". 
 
@@ -927,7 +929,23 @@ Now we can install the MongoDB Packages
 ```sudo apt-get install -y mongodb-org```  
 This installes the latest stable version of MongoDB
 
-### Running MongoDB
+### Uninstalling Mongodb    
+
+```bash
+sudo service mongod stop  
+sudo apt-get purge mongodb-org*
+```
+
+You also have to remove the data directories
+```
+sudo rm -r /var/log/mongodb
+sudo rm -r /var/lib/mongodb
+```
+
+
+If you get isses stating that mongodb-org dependancies are not met, you first need to remove the mongodb-org packages as well (using the same commands as above).
+
+## Running MongoDB
 
 **Note**  
 >Directories  
@@ -938,21 +956,25 @@ By default, MongoDB runs using the mongodb user account. If you change the user 
 The configuration files can be found under **/etc/mongod.conf**
 
 ### Starting Mongodb
-You can start the process using   
-```sudo service mongod start```
+You can start the process using:   
+```sudo service mongod start```  
+You can also use:  
+```sudo systemctl start mongodb```
 
->**Mongod** is the daemon that runs mongodb    
+>**Mongod** is the daemon that runs mongodb, this runs all the server tasks, including accepting requests, responding to clients and memory management.    
 (deamons are programs that run in the background)  
+
+>**Mongo** is a command line shell that can interact with the client - this can be usueful for system administrators and developers, but is not used if a program connects to a database over its api.
 
 You can check that the process is running using:     
 ```sudo service mongod status```
 
 ### Stopping MongoDB
-You can stop the mongod daemon using  
+You can stop the mongod daemon using:  
 ```sudo service mongod stop```  
 
 ### Restarting MongoDB
-You can restart the service using  
+You can restart the service using:  
 ```sudo service mongod restart```
 
 If the Process is running, you should be able to see: 
@@ -969,8 +991,61 @@ Output
 
 ```  
 
-If the database hasnt been able to start, you can start it using:    
-```sudo systemctl start mongodb```
+You should now have a local mongodb database running on your system.
+
+
+
+## Accessing a MongoDB database using Mongo
+
+>**Note:** Most of this guide comes from https://www.freecodecamp.org/news/learn-mongodb-a4ce205e7739/
+
+Now that we have a database set up on a system / our local system, we can now access it to create new databases. 
+
+if we open a new shell / terminal, we can use mongo to access our new mongod service. 
+
+we can open the mongo mediator by using: 
+```mongo```
+
+We can find the current database we are in using:
+```db```
+
+We can list the current databases using: 
+```show databases```
+
+
+## Accessing a MongoDB database using a GUI 
+We can also connect to a mongodb instance using other software.
+One of the most commonly used GUI's for accessing mongodb is their own GUI software **MongoDB Compass** 
+
+> You can download MongoDB Compass at https://www.mongodb.com/download-center/compass?jmp=docs
+
+You can connect to the created local instance by selecting ```fill in connection fields induvidually```, Then entering in the following infomation.  
+
+Hostname: ```localhost```  
+Port:  ```27017```  
+SRV Record: ```off```  
+Authenticaion: ```None```  
+
+If working, you should now see a list of the currrent databases within the mongod service. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### Issues I've run into  
 
@@ -987,23 +1062,8 @@ Failed with result 'exit-code'.
 
 
 
-If all else fails:  
-**Uninstalling Mongodb**  
+ 
 
-```bash
-sudo service mongod stop  
-sudo apt-get purge mongodb-org*
-sudo apt autoremove
-```
-
-You also have to remove the data directories
-```
-sudo rm -r /var/log/mongodb
-sudo rm -r /var/lib/mongodb
-```
-
-
-If you get isses stating that mongodb-org dependancies are not met, you first need to remove the mongodb-org packages as well (using the same commands as above).
 
 
 **Adjusting Firewall Options**
@@ -1032,5 +1092,5 @@ OpenSSH (v6)               ALLOW       Anywhere (v6)
 
 ```
 
-
+#
 

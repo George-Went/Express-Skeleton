@@ -1061,11 +1061,6 @@ Failed with result 'exit-code'.
 ```
 
 
-
- 
-
-
-
 **Adjusting Firewall Options**
 Even Though the MongoDB server has been set up, it will still only be accessable locally and will not be acceable from other systems.
 
@@ -1092,5 +1087,71 @@ OpenSSH (v6)               ALLOW       Anywhere (v6)
 
 ```
 
-#
+
+
+
+## Getting Started with MongoDB 
+
+### Terminology 
+**Database:** A physical container for collections, each database gets its own set of files and a directory system. A single MongoDB server typically has multiple databases.
+
+**Collection:** A Collection is similar to a table in RDBMS systems. One major differance is that collections do not enforece a schema (a standardised framwork / order).
+
+**Document:** Documents are a set of key-value pairs (linked) data. They can have ```dynamic schema``` meaning that they do not need to have the same set of fields or structure.  
+
+
+Comparison of Relational Database Management System ```RDBMS``` Terminiology with noSQL Terminology 
+```
+   RDBMS                 noSQL
+
+   Database              Database
+   Table                 Collection
+   Tuple / Row           Document
+   Column                Field
+   Table Join            Embedded Document
+   Primary Key           Primary Key (key_id provided by mongodb)
+
+```
+
+## Using Mongo 
+we can open the mongo mediator (program to control mongodb) by using: 
+```mongo```
+
+
+### Database Navigation
+We can find the current database we are in using:  
+```db```
+
+We can list the current databases using:   
+```show databases```
+
+We can switch databases using:   
+```use <database name>```  
+> **Note:** If you navigate to a database that does not exist, it will create a new database. 
+
+We can clear a screen using:  
+```cls```  
+
+### Database Population
+We can create a database using:  
+```use <database name>```
+
+We can show databases using:  
+```show databases```
+
+We can create collections using: 
+```db.createCollection('articles');```
+
+
+We can Show collections using: 
+```show collections```
+
+We can create a document inside the collection using:  
+```db.articles.insert({title:"Article One",author:"George Went",body:"This is article one"})```
+
+
+
+### Documetn selection
+
+### 
 

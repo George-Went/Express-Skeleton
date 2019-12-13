@@ -1139,19 +1139,29 @@ We can create a database using:
 We can show databases using:  
 ```show databases```
 
-We can create collections using: 
+We can create collections using:   
 ```db.createCollection('articles');```
 
 
-We can Show collections using: 
+We can show collections using:   
 ```show collections```
 
-We can create a document inside the collection using:  
+We can create a document inside the collection using:    
 ```db.articles.insert({title:"Article One",author:"George Went",body:"This is article one"})```
 
+We can add multiple documents at once using:
+```
+db.articles.insertMany([
+      {title:"Article One",author:"George Went",body:"This is article one"},
+      {title:"Article One",author:"George Went",body:"This is article two"}
+   ]);
+```
+
+We can show all the documents inside a collection using:   
+```db.articles.find();```
+
+We can show all the documents inside a collection in a more readable manner using:   
+```db.articles.find().pretty();```
 
 
-### Documetn selection
-
-### 
 

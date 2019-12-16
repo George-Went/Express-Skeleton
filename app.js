@@ -1,10 +1,20 @@
-var express = require('express'); 
-var path = require('path'); 
+const express = require('express'); 
+const path = require('path'); 
 // path module proveds utilities for working with files and directories
+const mongoose = require('mongoose')
 
+
+mongoose.connect('mongodb://localhost/nodedb');
+var db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  // we're connected!
+  console.log('connected to nodedb')
+});
 
 // Generate express application  
-var app = express();
+const app = express();
 
 
 // Load View Engine

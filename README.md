@@ -1164,4 +1164,32 @@ We can show all the documents inside a collection in a more readable manner usin
 ```db.articles.find().pretty();```
 
 
+### Data Location 
+You can find (and change) the location of where you data is stored by going to the configuration files and looking under ```dbPath```    
 
+By default these are located at ```/etc/mongod.conf```
+ 
+> **Note:** The default location that data is stored in is ```/var/lib/mongodb```
+
+
+
+# Mongoose 
+Mongoose is a client API ```(application programming interface)``` which allows us to modify MongoDB databases within node. Mongooses main purpouse is ```document modelling```, allowing us to process documents before adding them to the database. 
+
+## Installing Mongoose 
+We can install the Mongoose npm package using:   
+```npm install --save mongoose```
+
+## Getting Started
+
+### Connecting to a MongoDB Database
+```js
+//Importing Mongoose 
+var mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/test');
+//moongoose.connect(url / location)
+```
+This code snippet will allow us to use moongoose, then connect to a database at a specified location. 
+
+### 

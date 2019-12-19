@@ -1099,6 +1099,8 @@ OpenSSH (v6)               ALLOW       Anywhere (v6)
 
 **Document:** Documents are a set of key-value pairs (linked) data. They can have ```dynamic schema``` meaning that they do not need to have the same set of fields or structure.  
 
+**Schema:** A schema is a way for data to be mapped to a MogoDB collection and is used as a blueprint to define the format of the documents within a collection
+
 
 Comparison of Relational Database Management System ```RDBMS``` Terminiology with noSQL Terminology 
 ```
@@ -1187,9 +1189,53 @@ We can install the Mongoose npm package using:
 //Importing Mongoose 
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/test');
+db = mongoose.connect('mongodb://localhost/test');
 //moongoose.connect(url / location)
+//you can assing a varaible to the connected database
 ```
 This code snippet will allow us to use moongoose, then connect to a database at a specified location. 
 
-### 
+You can also create a callback to the database being connected, or failing to connect.
+
+```js
+//Reports the error to the conosle log screen if it has failed to connect
+db.on('error', console.error.bind(console, 'connection error:'));
+
+//Reports that the database has successfully been connected to
+db.once('open', function() {
+  // we're connected!
+  console.log('connected to nodedb')
+});
+```
+
+### Creating a Schema 
+While you can create schemas directly into the app.js file, creating them in a seperate file and then exporting them as modules allows us to reduce the complexity of the code. 
+```
+ Models
+    book.js
+ app.js
+```
+Example of a schema:  
+```js
+//Import mongoose
+let mongoose = require('moongoose');
+
+//Article Schema
+let articleSchema = mongoose.Schema({
+    title:{
+        type: String,      //Variable Type
+        required: true     //Is this variable required? (default is false)
+    },
+    author:{
+        type: String,
+        required: true
+    },
+    body:{
+        type: String,
+        required: true
+    }
+});
+
+//Export the js file as a module (class) called 'Book'
+let  Article = module.exports = mongoose.model('Article', articleSchema)
+```

@@ -7,6 +7,7 @@ const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost/nodedb');
 var db = mongoose.connection;
 
+// Check Connection
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   // we're connected!
@@ -34,55 +35,55 @@ app.get('/', function(req, res){
 
 
 // Article List Route
-app.get('/Articles', function(req, res){
+app.get('/articles', function(req, res){
 
   // Pulling from a Database 
   Article.find({}, function(err, Articles){
+    // If it cant find the articles collection - sends error
     if(err){
-      console.log(err);
+      console.log(err);  
     }
+    //If it can find articles - render infomation from the collection
     else{
-      res.render('index', {
-        title: Articles,
-        Articles: Articles 
+      res.render('articles', {
+        title: 'Article',
+        articles: Articles
       });
     } 
   });
-
-  // let Articles = [ // We create an array called "Articles"
-  //   {
-  //     id: 1,
-  //     title: "Article 1",
-  //     author: "Gwent went",
-  //     body: "Star Platinum"
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Article 2",
-  //     author: "Gwent went",
-  //     body: "Joe mama"
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Article 3",
-  //     author: "joestar",
-  //     body: "AYAYAYAYA"
-  //   },
-  // ]
-
-  //Respons with a render of the infomation
-  // res.render('Articles', {
-  //   title: 'List of Articles',
-  //   Articles: Articles // "Articles" value is the "Articles" array
-  // });
 });
 
 
-// Add Route
-app.get('/Article/add', function(req, res){
-  res.render('add_Article', {
-    title:'Add Articles'
-  })
+// Article List Route
+app.get('/articlesBase', function(req, res){
+  let articles = [ // We create an array called "Articles"
+      {
+        id: 1,
+        title: "Article 1",
+        author: "Gwent went",
+        body: "Star Platinum"
+      },
+      {
+        id: 2,
+        title: "Article 2",
+        author: "Gwent went",
+        body: "Joe mama"
+      },
+      {
+        id: 3,
+        title: "Article 3",
+        author: "joestar",
+        body: "AYAYAYAYA"
+      },
+    ]
+
+    // Respons with a render of the infomation
+    res.render('articles', {
+      title: 'Articles',
+      articles: articles
+      // Author: articles.author, // "Articles" value is the "Articles" array
+      // Body: articles.body
+    });
 });
 
 // Start Server

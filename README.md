@@ -1236,6 +1236,71 @@ let articleSchema = mongoose.Schema({
     }
 });
 
-//Export the js file as a module (class) called 'Book'
+//Export the js file as a module (class) called 'Article'
 let  Article = module.exports = mongoose.model('Article', articleSchema)
 ```
+>**Note:** ```mongoose.model('Article', articleSchema)``` is where we specify what collection we want to connect to within the mongoDB database. This is then defined as ```Article``` as an export
+
+###  Retriveing Documents from the Database
+Now that we have a schema to pull data from a collection onto a blueprint, we can now contact the database to ask for data to be sent in the schemas format.
+
+Our first step in the ```app.js``` file is to bring in the modeles (schemas) that we have created and are set up for export. 
+
+```app.js```
+```js
+// Bring in Models
+var Article = require('./models/article');
+```
+
+This gives us access to the schema 
+
+```js
+// Article List Route
+app.get('/articles', function(req, res){
+
+  // Pulling from a Database 
+  Article.find({}, function(err, Articles){
+    // If it cant find the articles collection - sends error
+    if(err){
+      console.log(err);  
+    }
+    //If it can find articles - render infomation from the collection
+    else{
+      res.render('articles', {        // Renders ./view/articles
+        title: 'Article',             // Defines to pug variable 'Title'
+        articles: Articles            // Defines pug variable 'Articles'
+      });
+    } 
+  });
+});
+```
+We also need to add a template under the views:  
+```articles.pug```  
+```
+extends layout
+
+block content
+   h1 #{title}
+   ul                                  // Unorderd (bullet point List)
+      each article, i in articles      // for each article (n) in the database
+         li= article.title             
+         li= article.author           
+         li= article.body
+```
+
+
+>**Note:** We dont need to specify the collection we need to connect to, or specify what part of the data we need to get, this is sorted out by the schema we have in ```./models/articles``` 
+
+>**Note:** Remeber that we have exported the schema and called it ```Article``` - this is what we use to referance the schema in ```app.js```, the connection to the database are handeled in ```articles.js```.
+
+
+
+
+
+
+
+
+### Saving Documents 
+
+
+

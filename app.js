@@ -1,7 +1,7 @@
 const express = require('express'); 
 const path = require('path');         // path module proveds utilities for working with files and directories
-const mongoose = require('mongoose')
-
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');;
 
 
 mongoose.connect('mongodb://localhost/nodedb');
@@ -25,6 +25,13 @@ var Article = require('./models/article');
 // Load View Engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+
+//Body Parser Middleware
+  // parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }))
+  // parse application/json
+app.use(bodyParser.json())
+
 
 // Home Route
 app.get('/', function(req, res){
@@ -53,9 +60,31 @@ app.get('/articles', function(req, res){
   });
 });
 
+// Add Articles 
+app.get('/articles/add', function(req, res){
+  res.render('add_articles', {
+    title: "Add Article"
+  });
+});
+
+
+// Add Article POST Route 
+app.post('/articles/add', function(req, res){
+  console.log('submitted');
+  console.log(req.body)
+
+  return; 
+  // let article = new article();
+  // article.title = req.body.title;
+});
+
+
+
+
+
 
 // Article List Route
-app.get('/articlesBase', function(req, res){
+app.get('/articlesArray', function(req, res){
   let articles = [ // We create an array called "Articles"
       {
         id: 1,
@@ -85,6 +114,15 @@ app.get('/articlesBase', function(req, res){
       // Body: articles.body
     });
 });
+
+
+
+
+
+
+
+
+
 
 // Start Server
 app.listen(3000, function(){

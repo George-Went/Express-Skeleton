@@ -1294,13 +1294,118 @@ block content
 >**Note:** Remeber that we have exported the schema and called it ```Article``` - this is what we use to referance the schema in ```app.js```, the connection to the database are handeled in ```articles.js```.
 
 
-
-
-
-
-
-
 ### Saving Documents 
+We can also use the articles schema to save documents into certian collections that can be used by forms to map data.
+
+### Creating a Form 
+The first task is to create a html form that clients can access to add new articles to the database.  
+
+First we can create a new route in ```app.js``` for users to go to if they want to add a article.
+
+```js
+// Add Articles 
+app.get('/articles/add', function(req, res){
+  res.render('add_articles', {
+    title: "Add Article"
+  });
+});
+```
+
+One thing to take note of in the above snippet is the new rendering file we are using. ```add_articles``` is a new pug file that contains a form to input data.  
+
+```add_articles.pug```
+```pug
+extends layout
+
+block content
+   h2 #{title}  // matches 'title' variable in res.render
+   body
+      form(action='/articles/add', method='POST')
+         div
+            label(for='title') Title:
+            input(name='title', type='text')
+         br
+         div
+            label(for='author') Author:
+            input(name='author', type='text')
+         br 
+         div
+            label(for='body') Body:
+            input(name='body', type='text')
+         br
+         button(type='submit') Add
+```
+The most important part of the pug file is the ```form(action='/articles/add', method='POST')``` as this dentoes that:   
+1. When a ```submit``` element is triggered the form runs ```/articels/add```
+2. The method that the form uses, The two most common methods are:
+   * ```GET```: This is for changing and viewing something, usually a web page or to pull infomation from a database or another site, you cant change infomation using ```get```.
+   * ```POST```: This is used for writing or submitting data to be processed, and can result in the creation of new resoureces, or updating existing resources. 
+
+
+
+>**Note:** One of the main things to make sure to check is the indetation on pug files, as elements that are not indented properly (such as form buttons) will not be 'included' in the form.
+
+### Getting a Response from client to server 
+Before we can communicate from client to server to database, we can check the our form does actually send data from the client to the server. We can check this just by adding a console log that is run when a client processes a form. 
+
+```app.js```
+```js
+// Add Article POST Route 
+app.post('/articles/add', function(req, res){
+  console.log('submitted');  // On a successful POST, retuns a 
+  return;                    // Stopps the execution of the function after posting the log
+});
+```
+>**Note:** Routes can have both a ```GET``` and a ```POST``` function.
+
+When run you can see that submitting the form will cause the console.log fucntion to run.
+
+### Handling Form Input
+Trying to parse (interpret) requested text from a form using normal methods will usually result in a fault/error.
+
+```js
+app.post('/articles/add', function(req, res){
+
+  console.log(req.body.title); //Request the HTML element 'title'
+  return;                    
+});
+```
+While the above code would seem to work, in reality it will only produce an error message
+
+#### Installing Body-Parser
+We can retrive submitted form data by using a npm package called ```body-parser``` which allows us to parse form data within a request body.
+
+You can install body parser using:  
+```npm install --save body-parser```
+
+Within ```app.js``` we can define bodyparser:
+```js
+const bodyParser = require('body-parser');
+```
+
+We then need to tell the app to use the package, this can be added after initilising express, but before any of the routes are defined:
+```js
+// Initilise express application  
+const app = express();
+
+//Body Parser
+  // parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }))
+  // parse application/json
+app.use(bodyParser.json())
+
+//Routes
+``` 
+>**Note:** The ```{extended: true}``` function allows for the posting and parsing of nested objects/bodys (``` { person: { name: John} } ```). If set to ```false``` then nested objects are not allowed.
+
+
+
+
+
+
+
+
+
 
 
 

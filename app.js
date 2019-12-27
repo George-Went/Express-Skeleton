@@ -20,17 +20,34 @@ db.once('open', function() {
 const app = express();
 
 // Bring in Models
-var Article = require('./models/article');
+var ArticleModel = require('./models/article');
 
 // Load View Engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+
+
+
+
+
+
+
 
 //Body Parser Middleware
   // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
   // parse application/json
 app.use(bodyParser.json())
+
+
+
+
+
+
+
+
+
+
 
 
 // Home Route
@@ -41,11 +58,18 @@ app.get('/', function(req, res){
 });
 
 
+
+
+
+
+
+
+
 // Article List Route
 app.get('/articles', function(req, res){
 
   // Pulling from a Database 
-  Article.find({}, function(err, Articles){
+  ArticleModel.find({}, function(err, Articles){
     // If it cant find the articles collection - sends error
     if(err){
       console.log(err);  
@@ -60,7 +84,23 @@ app.get('/articles', function(req, res){
   });
 });
 
-// Add Articles 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Add Articles ----------------------------------------
 app.get('/articles/add', function(req, res){
   res.render('add_articles', {
     title: "Add Article"
@@ -70,12 +110,35 @@ app.get('/articles/add', function(req, res){
 
 // Add Article POST Route 
 app.post('/articles/add', function(req, res){
+  
+  var articleInfo = req.body.articleTitle
+  
+  console.log(articleInfo);         
   console.log('submitted');
-  console.log(req.body)
 
-  return; 
-  // let article = new article();
-  // article.title = req.body.title;
+  var newArticle = new ArticleModel({
+    title: req.body.articleTitle,
+    author: req.body.articleAuthor,
+    body: req.body.articleBody
+  })
+  
+  console.log(newArticle)
+
+  newArticle.save(function(err, ArticleModel){
+    if(err)
+    res.render('show_message', {message: "Database error", type: "error"});
+    else
+    res.render('show_message', {
+       message: "New person added", type: "success", person: personInfo});
+  })
+
+
+
+
+  res.render('add_articles', {
+    title: "Add Article"
+  });
+  return;
 });
 
 

@@ -695,7 +695,7 @@ In Express routing functions are defined by ```app.method(path,handler)```
 
 The example routing files in the skeleton project above, ```index.js``` and ```example.js``` are examples of 
 
-## Creating a basic routing file 
+## Creating a basic routing file
 ```./routes/example.js```
 ```javascript
 var express = require('express');  //imports express libraries 
@@ -1300,19 +1300,6 @@ We can also use the articles schema to save documents into certian collections t
 ### Creating a Form 
 The first task is to create a html form that clients can access to add new articles to the database.  
 
-First we can create a new route in ```app.js``` for users to go to if they want to add a article.
-
-```js
-// Add Articles 
-app.get('/articles/add', function(req, res){
-  res.render('add_articles', {
-    title: "Add Article"
-  });
-});
-```
-
-One thing to take note of in the above snippet is the new rendering file we are using. ```add_articles``` is a new pug file that contains a form to input data.  
-
 ```add_articles.pug```
 ```pug
 extends layout
@@ -1342,23 +1329,38 @@ The most important part of the pug file is the ```form(action='/articles/add', m
    * ```POST```: This is used for writing or submitting data to be processed, and can result in the creation of new resoureces, or updating existing resources. 
 
 
-
 >**Note:** One of the main things to make sure to check is the indetation on pug files, as elements that are not indented properly (such as form buttons) will not be 'included' in the form.
+
+
+Now that we have the pug file layout ready, we can create a new route to add the layout to (within ```app.js```):
+
+```js
+// Add Articles 
+app.get('/articles/add', function(req, res){
+  res.render('add_articles', {
+    title: "Add Article"     
+  });
+});
+```
+
 
 ### Getting a Response from client to server 
 Before we can communicate from client to server to database, we can check the our form does actually send data from the client to the server. We can check this just by adding a console log that is run when a client processes a form. 
+
+>**Note:**app.post is our ```form-handler``` which is what is run when a user activates a ```submit``` element.
 
 ```app.js```
 ```js
 // Add Article POST Route 
 app.post('/articles/add', function(req, res){
   console.log('submitted');  // On a successful POST, retuns a 
-  return;                    // Stopps the execution of the function after posting the log
+  return;                    
+  // Stopps the execution of the function after posting the log
 });
 ```
 >**Note:** Routes can have both a ```GET``` and a ```POST``` function.
 
-When run you can see that submitting the form will cause the console.log fucntion to run.
+When run you can see that submitting the form will cause the console.log function to run.
 
 ### Handling Form Input
 Trying to parse (interpret) requested text from a form using normal methods will usually result in a fault/error.
@@ -1367,6 +1369,7 @@ Trying to parse (interpret) requested text from a form using normal methods will
 app.post('/articles/add', function(req, res){
 
   console.log(req.body.title); //Request the HTML element 'title'
+  console.log(req.body);       //Requests all HTML elements within 'body'
   return;                    
 });
 ```
@@ -1398,7 +1401,27 @@ app.use(bodyParser.json())
 ``` 
 >**Note:** The ```{extended: true}``` function allows for the posting and parsing of nested objects/bodys (``` { person: { name: John} } ```). If set to ```false``` then nested objects are not allowed.
 
+### Handling Form Input (For Real)
+```js
+app.post('/articles/add', function(req, res){
 
+  console.log(req.body.title); //Request the HTML element 'title'
+  console.log(req.body);       //Requests all HTML elements within 'body'
+  return;                    
+});
+```
+Now that we have body-parser, we can run the code and our data will move from the clients form to our servers console! 
+
+We now need to get this data into the database.
+First we can move the data straight from the form into the model we created to connect to the mongodb database. 
+
+```js
+var newArticle = new ArticleModel({
+    title: req.body.articleTitle,
+    author: req.body.articleAuthor,
+    body: req.body.articleBody
+  })
+```
 
 
 

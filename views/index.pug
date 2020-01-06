@@ -2,20 +2,7 @@ extends layout
 
 block content
    h2 #{title}
-   form(actions='/articles/add', method='POST')
-   div
-      label(for='title') Title:
-      input(name='title', type='text')
-   br
-   div
-      label(for='author') Author:
-      input(name='author', type='text')
-   br 
-   div
-      label(for='body') Body:
-      input(name='body', type='text')
-   br
-   button(type='submit') Add
+   a(href='/articles/add') Add Article
 
 
    h2 Bootstrap

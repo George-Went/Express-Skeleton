@@ -28,11 +28,6 @@ app.set('view engine', 'pug');
 
 
 
-
-
-
-
-
 //Body Parser Middleware
   // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -40,14 +35,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 
-
-
-
-
-
-
-
-
+// ------------------------------------------------------------------
 
 
 // Home Route
@@ -56,10 +44,6 @@ app.get('/', function(req, res){
     title: 'Hello'
   });
 });
-
-
-
-
 
 
 
@@ -88,18 +72,6 @@ app.get('/articles', function(req, res){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 // Add Articles ----------------------------------------
 app.get('/articles/add', function(req, res){
   res.render('add_articles', {
@@ -108,38 +80,29 @@ app.get('/articles/add', function(req, res){
 });
 
 
-// Add Article POST Route 
-app.post('/articles/add', function(req, res){
+// Add Submit POST Route 
+app.post('/articles/add', function(req, res){   // app.post is used for reciving infomation from the client
   
   var articleInfo = req.body.articleTitle
   
-  console.log(articleInfo);         
-  console.log('submitted');
+  console.log(articleInfo);    //will show sent aritcle info in the console
+  console.log('submitted');    //remeber this is the server - not the client
 
-  var newArticle = new ArticleModel({
-    title: req.body.articleTitle,
-    author: req.body.articleAuthor,
-    body: req.body.articleBody
-  })
-  
-  console.log(newArticle)
+  let article = new ArticleModel();
+  article.title = req.body.articleTitle;
+  article.author = req.body.articleAuthor;
+  article.body = req.body.articleBody;
 
-  newArticle.save(function(err, ArticleModel){
-    if(err)
-    res.render('show_message', {message: "Database error", type: "error"});
-    else
-    res.render('show_message', {
-       message: "New person added", type: "success", person: personInfo});
-  })
-
-
-
-
-  res.render('add_articles', {
-    title: "Add Article"
+  article.save(function(err){
+    if(err){            
+      console.log(err)            //If there is an error, posts the report to the console
+      return;
+    } else {                      //Otherwise returns the client to /articles
+      res.redirect('/articles')
+    }
   });
-  return;
 });
+
 
 
 
@@ -177,13 +140,6 @@ app.get('/articlesArray', function(req, res){
       // Body: articles.body
     });
 });
-
-
-
-
-
-
-
 
 
 

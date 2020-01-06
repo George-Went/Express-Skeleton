@@ -793,7 +793,8 @@ app.use(express.static(path.join(__dirname, './public')));
 extends layout
 
 block content
-  h1= title
+  h1= titleGB
+
   p Welcome to #{name}
   p Adress: #{address}
 ```
@@ -1347,7 +1348,7 @@ app.get('/articles/add', function(req, res){
 ### Getting a Response from client to server 
 Before we can communicate from client to server to database, we can check the our form does actually send data from the client to the server. We can check this just by adding a console log that is run when a client processes a form. 
 
->**Note:**app.post is our ```form-handler``` which is what is run when a user activates a ```submit``` element.
+>**Note:** app.post is our ```form-handler``` which is what is run when a user activates a ```submit``` element (the button).
 
 ```app.js```
 ```js
@@ -1402,6 +1403,8 @@ app.use(bodyParser.json())
 >**Note:** The ```{extended: true}``` function allows for the posting and parsing of nested objects/bodys (``` { person: { name: John} } ```). If set to ```false``` then nested objects are not allowed.
 
 ### Handling Form Input (For Real)
+
+Now that we have body-parser, we can run the code and our data will move from the clients form to our servers console! 
 ```js
 app.post('/articles/add', function(req, res){
 
@@ -1410,25 +1413,38 @@ app.post('/articles/add', function(req, res){
   return;                    
 });
 ```
-Now that we have body-parser, we can run the code and our data will move from the clients form to our servers console! 
+When the above snippet is run, you (should) be able to see the title of the article in your console, while this doesnt seem like much it shows that we can now take data from the client to the server :D.
 
 We now need to get this data into the database.
 First we can move the data straight from the form into the model we created to connect to the mongodb database. 
 
 ```js
-var newArticle = new ArticleModel({
-    title: req.body.articleTitle,
-    author: req.body.articleAuthor,
-    body: req.body.articleBody
-  })
+  let article = new ArticleModel();         //Creates a new instance of ArticleModel Collection
+  article.title = req.body.articleTitle;    //Links the new instace of ArticleModel to the HTML element articleTitle (in the pug file)
+  article.author = req.body.articleAuthor;
+  article.body = req.body.articleBody;
 ```
 
+Now that we have mapped our form to an instance of the ```ArticleModel``` collection, we can now save this data to the mongoDB database. 
 
+MongoDB has the ```.save()``` function, which allows us to save our mapped ```ArticleModel``` to the mongoDB database. 
 
+To just save the model we can use ```db.collection.save()```, which in out case would just be ```article.save()```.
 
+However we also want to check that the data that we are saving is correct - while issues like sql injection can be dealed with later, we should still have some sort of test in place. 
 
+We can add a function to check for issues within the ```save()``` 
 
+```js
+article.save(
+   function(err){
+    if(err){                        
+      console.log(err)            //If there is an error, posts the report to the console
+      return;
+    } else {
+      res.redirect('/articles')   //Otherwise returns the client to /articles
+    }
+  });
+```
 
-
-
-
+## Bootstrap

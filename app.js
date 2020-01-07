@@ -34,6 +34,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
   // parse application/json
 app.use(bodyParser.json())
 
+//Set Public Folder
+
+
 
 // ------------------------------------------------------------------
 
@@ -72,7 +75,7 @@ app.get('/articles', function(req, res){
 
 
 
-// Add Articles ----------------------------------------
+// Add Articles ---------------------------------------------------
 app.get('/articles/add', function(req, res){
   res.render('add_articles', {
     title: "Add Article"
@@ -102,6 +105,22 @@ app.post('/articles/add', function(req, res){   // app.post is used for reciving
     }
   });
 });
+
+// ---------------------------------------------------------------
+
+// Add Articles (v2) ---------------------------------------------------
+
+app.get('/articles/add', function(req,res){
+  res.render('add_articles', {
+    title: "Add Article Form"
+  });
+})
+
+
+
+
+
+
 
 
 

@@ -3,6 +3,8 @@ const path = require('path');         // path module proveds utilities for worki
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');;
 
+//sitepoint
+const{ body, validationResult} = require('express-validator')
 
 mongoose.connect('mongodb://localhost/nodedb');
 var db = mongoose.connection;
@@ -110,13 +112,40 @@ app.post('/articles/add', function(req, res){   // app.post is used for reciving
 
 // Add Articles (v2) ---------------------------------------------------
 
-app.get('/articles/add', function(req,res){
-  res.render('add_articles', {
+app.get('/articles/sitepoint', function(req,res){
+  res.render('sitepoint_articles', {
     title: "Add Article Form"
   });
 })
 
+app.post('/articles/sitepoint', 
+  [
+    body('name')
+      .isLength({ min:1 })
+      .withMessage('Please Enter a title'),
+    body('author')
+      .isLength({ min:1 })
+      .withMessage('Please Enter a author'),
+    body('body')
+      .isLength({ min:1 })
+      .withMessage('Please Enter your article'),
+  ],
 
+  function(req,res){
+    const errors = validationResult(req);
+
+    if(errors.isEmpty()) {
+      res.send('Thanks for adding article');
+      console.log("input detected")
+    } else {
+      res.render('sitepoint_articles', {
+        title: 'Add Article Form',
+        errors: errors.array(),
+        data: req.body,        
+      });
+    }
+  }
+);
 
 
 

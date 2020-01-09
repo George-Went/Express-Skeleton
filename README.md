@@ -1448,12 +1448,15 @@ article.save(
 ```
 
 ## Validating Form Input
+While we can write our own checks to form validation, we can also use pre-exisitng middleware. ```express-validator``` is a commonly used npm dependancy that provides a number of useful methods form the sanitization and validation of client input.
 
+You can install it using:  
+```npm install express-validator --save```
 
-
-
-
-
+As with other npm dependancies or middleware, to require the functions we need the following code in ```app.js```.
+```js
+const { body, validationResult } = require('express-validator/check');
+```
 
 
 

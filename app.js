@@ -147,9 +147,11 @@ app.post('/articles/sitepoint',
   }
 );
 
+// -------------------------------------------------------------------
 
-
-
+app.get('/crud', (req, res) => {
+  res.render('crud.html');
+})
 
 
 

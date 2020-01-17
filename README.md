@@ -642,7 +642,7 @@ var path = require('path');
 
 > **Note:** The ```require()``` function in node acts like the import function in other languages such as java or python.
 
-After importing modules, we then need to import our own modules from our application directory, in particular our routes (URL paths). This can also be extended to other functions such as database controllers or induvidual functions executed by multiple pages such as permission checking systems. 
+After importing modules, we then need to import our own modules from our application directory, in particular our `routes` (URL paths). This can also be extended to other functions such as database controllers or induvidual functions executed by multiple pages such as permission checking systems. 
 
 ```javascript
 var indexRouter = require('./routes/index');
@@ -661,6 +661,80 @@ var app = express(); // defines the express libraries as app
 Adding middleware such as templating and error handeling can be done by utilising the ```app.set``` function to point to a directory, and the ```app.use``` function to use a imported middleware funciton or route.  
 
 ### Routes 
+Routes are important for a site (i think)
+
+Routes are defined using REST models 
+```
+/* GET users listing. */
+router.get('/', function(req, res, next) {
+  res.send('respond with a resource');
+});
+
+/* POST users listing. */
+router.get('/', function(req, res, next) {
+  res.send('respond with a resource');
+});
+```
+
+Here are some examples of route paths based on strings.
+This route path will match requests to the root route, /.
+```js
+app.get('/', function (req, res) {
+  res.send('root')
+})
+```
+This route path will match requests to /about.
+```js
+app.get('/about', function (req, res) {
+  res.send('about')
+})
+```
+This route path will match requests to /random.text.
+```js
+app.get('/random.text', function (req, res) {
+  res.send('random.text')
+})
+```
+Here are some examples of route paths based on string patterns.
+
+This route path will match acd and abcd.
+```js
+app.get('/ab?cd', function (req, res) {
+  res.send('ab?cd')
+})
+```
+This route path will match abcd, abbcd, abbbcd, and so on.
+```js
+app.get('/ab+cd', function (req, res) {
+  res.send('ab+cd')
+})
+```
+This route path will match abcd, abxcd, abRANDOMcd, ab123cd, and so on.
+```js
+app.get('/ab*cd', function (req, res) {
+  res.send('ab*cd')
+})
+```
+This route path will match /abe and /abcde.
+```js
+app.get('/ab(cd)?e', function (req, res) {
+  res.send('ab(cd)?e')
+})
+```
+Examples of route paths based on regular expressions:
+
+This route path will match anything with an “a” in it.
+```js
+app.get(/a/, function (req, res) {
+  res.send('/a/')
+})
+```
+This route path will match butterfly and dragonfly, but not butterflyman, dragonflyman, and so on.
+```js
+app.get(/.*fly$/, function (req, res) {
+  res.send('/.*fly$/')
+})
+```
 
 ### Error Handling 
 
@@ -1241,6 +1315,64 @@ let articleSchema = mongoose.Schema({
 let  Article = module.exports = mongoose.model('Article', articleSchema)
 ```
 >**Note:** ```mongoose.model('Article', articleSchema)``` is where we specify what collection we want to connect to within the mongoDB database. This is then defined as ```Article``` as an export
+
+#### Schema types (fields)
+A schema can have an arbitary number of fields - each one represents a 'field' in the documents:
+
+```js
+var schema = new Schema(
+{
+  name: String,
+  binary: Buffer,
+  living: Boolean,
+  updated: { type: Date, default: Date.now() },
+  age: { type: Number, min: 18, max: 65, required: true },
+  mixed: Schema.Types.Mixed,
+  _someId: Schema.Types.ObjectId,
+  array: [],
+  ofString: [String], // You can also have an array of each of the other types too.
+  nested: { stuff: { type: String, lowercase: true, trim: true } }
+})
+```
+While most follow other database value types, their are 3 exceptions: 
+```ObjectID```: Represents specific instances of a model in the database - this will actually contain the unique ID ```(_id)``` that the field has. 
+
+```Mixed```: An 'anything goes' type field
+
+```[]```: An array of items - you can pull javascript operations on these models. 
+
+#### Schema Validation
+Mongoose provides built-in custom validation
+The build in validators include :
+* All schema types have the ```required``` validator. This is used to specify whether the field must be supplied in order to save a document 
+* ```Numbers``` have ```min``` and ```max``` values.
+* Strings have: 
+  * ```enum```: specifies the set of allowed values for the field 
+  * ```match```: specifies a regular expression that the string must match.
+  *  ```maxlength``` and ```minlength``` for the string.
+
+```js
+var breakfastSchema = new Schema({
+  eggs: {
+    type: Number,
+    min: [6, 'Too few eggs'],
+    max: 12,
+    required: [true, 'Why no eggs?']
+  },
+  drink: {
+    type: String,
+    enum: ['Coffee', 'Tea', 'Water',]
+  }
+});
+
+```
+#### Virtual Properties 
+Virtual Properties are properties that a person can get and set, but do *not* persist to a MongoDB database.   
+```Getters```: Useful for formatting or combining fields.    
+```Setters```: Useful for de-composing a single value into multiple values for storage.  
+
+
+
 
 ###  Retriveing Documents from the Database
 Now that we have a schema to pull data from a collection onto a blueprint, we can now contact the database to ask for data to be sent in the schemas format.

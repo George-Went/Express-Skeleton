@@ -6,11 +6,11 @@ var BookSchema = new Schema(
   {
     title: {type: String, required: true},
     author: {type: Schema.Types.ObjectId, ref: 'Author', required: true},
-    // Is a referance to the author.js 
+    // Is a referance to the author.js (author is also required)
     summary: {type: String, required: true},
     isbn: {type: String, required: true},
     genre: [{type: Schema.Types.ObjectId, ref: 'Genre'}]
-    // Is a referance to the author.js 
+    // Is a referance to the genre.js
   }
 );
 

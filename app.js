@@ -11,6 +11,7 @@ const bodyParser = require('body-parser');
 //Route Imports  --------------------------------------------
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var catalogRouter = require('./routes/catalog'); 
 
 //Set up default mongoose connection
 var mongoDB = 'mongodb://localhost/nodedb';
@@ -43,8 +44,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
-
+app.use('/catalog', catalogRouter);  // Add catalog routes to middleware chain.
+// If we map to a certian route, any route in the .js file
+// will become /catalog/<route_defined> (/ becomes /catalog)
 
 
 

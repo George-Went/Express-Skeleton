@@ -800,9 +800,28 @@ An example of how paramaters can work with both node and the pug template struct
 router.get('/:name/:address', function(req,res) {
    var name = req.params.name;
    var address = req.params.address;
-   res.render('index', {title: name, address## Views / Templates 
+   res.render('index', {title: name, address: address} 
+```
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Templating
 One of the main issues with node is that writing HTML and CSS code directly into a javascript ```.get``` function is that it can be hard to tell when the js ends and the HTML begins. 
 
 Templating engines are used to remove HTML code clutter when generating or auto-generating pages, if you have a HTML page that has a generated dev based on the result of a .js file var, congratulations thats technically a templating engine. 

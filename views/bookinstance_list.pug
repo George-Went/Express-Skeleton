@@ -4,9 +4,16 @@ block content
   h1= title
 
   ul
+    // for each 
     each val in bookinstance_list
       li 
-        a(href=val.url) #{val.book.title} : #{val.imprint} - 
+        // attribute to link the book title to the 'virtual' url link value
+        a(href=val.url) #{val.book.title}   
+
+        // attribute linking the books publisher and author
+        | #{val.imprint}: -
+
+        // Check book status using if statements (part of pug)
         if val.status=='Available'
           span.text-success #{val.status}
         else if val.status=='Maintenance'

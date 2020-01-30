@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
+var moment = require('moment');
 
 var AuthorSchema = new Schema(
   {
@@ -24,7 +25,6 @@ AuthorSchema
     if (!this.first_name || !this.family_name) {
         fullname = '';
     }
-
     return fullname;
 });
 
@@ -33,6 +33,25 @@ AuthorSchema
 .virtual('lifespan')
 .get(function () {
   return (this.date_of_death.getYear() - this.date_of_birth.getYear()).toString();
+});
+
+AuthorSchema
+.virtual('date_of_birth_format')
+.get(function (){
+  return moment(this.date_of_birth).format('MMMM Do, YYYY');
+});
+
+// Virtual returning specific value if the author is alive 
+// (MongoDB database records death as current time otherwise)
+AuthorSchema
+.virtual('date_of_death_format')
+.get(function (){
+  if (this.date_of_death == moment.Date) {
+    return 'alive';
+  }
+  else {
+    return moment(this.date_of_death).format('MMMM Do, YYYY');
+  }
 });
 
 // Virtual for author's URL concatonates mongoDB_id with string

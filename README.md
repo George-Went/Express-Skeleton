@@ -474,31 +474,6 @@ The above pug file ```books.pug```   works as such:
 
 
 
-# Old stuff
-
-
-
-
-As well as specifying the template engine, you also have to make sure that the express "```.app```" can find and then use public files, such as images, javascript and most importantly for our templates, css stylesheets. This can be solved by allowing the app to use files that are stored under ```/public```, in a similar fashion to allowing the app to access third party middleware. 
-
-```javascript
-
-app.use(express.static(path.join(__dirname, './public')));
-
-```
-> Note - This code needs to be placed after added routes, otherwise the new files cant access ```/public```
-```
-doctype html
-html
-   head 
-      title Index
-   body 
-      h1 Hello world!
-```
-
-
-
-
 
 
 
@@ -809,6 +784,50 @@ router.get('/:name/:address', function(req,res) {
 
 
 
+# Controllers 
+
+Controllers are part of the MVC ```Model, View, Controller``` methodology and are used to control the backend interactions on the website such as displaying data and matching variables to display elements in views.  
+
+
+## Creating a basic controller file
+An example of a basic controller that just sends a string when a user reqests the route ```hello```. 
+
+```js
+// Display Genre create form on GET.
+exports.hello = function(req, res) {
+    res.send('Hello There!');
+};
+
+```
+
+An example of a more complex route that contains middleware functions - as denoted by the ```next``` after the request and the response. The middleware function in this case links to a model called ```Genre``` that then allows us to display genre data from our mongoDB database.  
+
+```js
+var Genre = require('../models/genre');
+
+// Display list of all Genre.
+exports.genre_list = function(req, res, next) {
+    Genre.find()
+      .sort([['name', 'ascending']])
+      .exec(function (err, list_genres) {
+
+        if (err) { return next(err); }
+        //Successful, so render
+        res.render('genre_list', { title: 'Genre List', genre_list: list_genres });
+      });
+};
+```
+
+## Controllers and asynchronous requests
+
+Most of the methods used within express are asynchronus by design:  
+- specify an operation to peform (```Please add these two variables```)
+- specify a callback (```I will say "done" when i have added the two numbers```)
+- method is called and run (```The answer to 1 + 1 is 2```)
+- callback is invoked when requested operation is complete (```operation [add two numbers] is "done"```)
+
+When a controller only needs to take one this works fine, however what if a user wants to take multiple requests - such as collecting multiple sets of data from a database or also dispalying images at the same time.  
+You could daisy chain the operators together so that function 1 calls function 2 and when function 2 is complete function 1 runs - with multiple requests this can become very messy an leads to complex nested code, known as ```callback hell```.
 
 
 
@@ -985,6 +1004,8 @@ npm install --save cookie-parser morgan debug http-errors
 
 > **Note** If your using a pre-built node application, you can install all the relevent dependancies by using ```npm install```.
 
+
+
 ### Importing the dependacies 
 We can import our packages into the ```app.js``` express application in the same way that routes are imported. 
 
@@ -1020,6 +1041,26 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1158,38 +1199,13 @@ Authenticaion: ```None```
 If working, you should now see a list of the currrent databases within the mongod service. 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### Issues I've run into  
 
 **Failed with result "exit code" / error 100**
 ```
 ● mongodb.service - An object/document-oriented database
    Loaded: loaded (/lib/systemd/system/mongodb.service; enabled; vendor preset: enabled)
-   Active: failed (Result: exit-code) since Mon 2019-11-25 10:11:32 GMT; 1 day 23h ago
-     Docs: man:mongod(1)
-  Process: 9500 ExecStart=/usr/bin/mongod --unixSocketPrefix=${SOCKETPATH} --config ${CONF} $DAEMON_OPTS (code=exited, sta
- Main PID: 9500 (code=exited, status=100)
-Failed with result 'exit-code'.
-```
-
-
+   Active: failed (Result: exit-code) since Mon 2019-11-25 10:11:32 GMT; 1 day 23h ago  
 **Adjusting Firewall Options**
 Even Though the MongoDB server has been set up, it will still only be accessable locally and will not be acceable from other systems.
 
@@ -1215,7 +1231,6 @@ OpenSSH (v6)               ALLOW       Anywhere (v6)
 27017 (v6)                 ALLOW       Anywhere (v6)
 
 ```
-
 
 
 
@@ -1643,6 +1658,8 @@ As with other npm dependancies or middleware, to require the functions we need t
 ```js
 const { body, validationResult } = require('express-validator/check');
 ```
+
+
 
 
 

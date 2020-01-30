@@ -11,7 +11,6 @@ exports.genre_list = function(req, res, next) {
         res.render('genre_list', { title: 'Genre List', genre_list: list_genres });
       });
 
-    
 };
 
 // Display detail page for a specific Genre.

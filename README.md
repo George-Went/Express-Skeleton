@@ -1648,7 +1648,7 @@ article.save(
   });
 ```
 
-## Validating Form Input
+## Validating and Sanitization
 While we can write our own checks to form validation, we can also use pre-exisitng middleware. ```express-validator``` is a commonly used npm dependancy that provides a number of useful methods form the sanitization and validation of client input.
 
 You can install it using:  
@@ -1656,15 +1656,45 @@ You can install it using:
 
 As with other npm dependancies or middleware, to require the functions we need the following code in ```app.js```.
 ```js
-const { body, validationResult } = require('express-validator/check');
+const { body,validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
 ```
 
+### Defining functions within express validator 
+```js 
+body(fields[,message])
+```
+This specifies a set of fields that the request ```body``` (a POST parameter) to validate. The ```[message]``` is optional, and can be used to display error messages in the element specified. 
 
+Checks if a name has been entered, if not - display "empty name"
+```js
+body('name', 'Empty name').isLength({ min: 1 })
+``` 
+Checks if a date has been entered in the correct manner - the ```optional({ checkFalsy: true })``` allows null and empty strings to *not* fail validation.
+```js
+body('age', 'Invalid age').optional({ checkFalsy: true }).isISO8601(),
+```
 
+You can also daisy chain different validations, with messages that display if the previous validations are true. 
 
+The below example checks for two validators: first it checks that there is a name has been entered, if this is true, it then checks that the name only consists of alphabetical characters.  
+```js
+body('name').isLength({ min: 1 }).trim().withMessage('Name empty.')
+    .isAlpha().withMessage('Name must be alphabet letters.'),
+```
 
+#### Sanitisation 
+Sanitisation is the process of removing specific characters from form inputs so that issues such as cross site attacks and SQL injection can't occur.  
 
+```js 
+sanitizeBody(fields)
+```
+Commonly used sanitization methods are daisy chained together: 
+```.trim()```: used to remove whitespace at the beginning and end of a string.
+```.escape()```: used to remove HTML characters (such as < and " ) from a string. 
 
+#### Validation Results
+As well as sending messages within the form object / body, express validator also bundles the results into a validation result object
 
 
 ## Bootstrap

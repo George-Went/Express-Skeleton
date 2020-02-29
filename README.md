@@ -1499,6 +1499,47 @@ block content
 ### Saving Documents 
 We can also use the articles schema to save documents into certian collections that can be used by forms to map data.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Forms 
+Forms can be used to collect infomation from a user which can then be submitted to the server for recording into a database or for further processing. 
+
+The main goals of a form is to: 
+1. Dispaly the default form the first time it is requested by the user. This form can contain blank or pre-filled fields.
+2. Recive data submitted by the user, usually in a HTTP ```POST``` request.
+3. validate and sanitize the data. 
+4. If any data is invalid, re-display the form with error messages
+5. If all data is valid, peform the required form actions, such as saving data to a database, sending an email or modifying the ented data to produce a result. 
+6. Once all actions are complete, redirect a user to another page, or notify the user that the task has been complete. 
+
+>**Note:** When looking at code for a form, the actual function dealing with form submission can be quite small, what makes up the bulk of form submission (and complications that can occur due to form submission) is to do with making sure that the data entered into a form is correct.  
+
 ### Creating a Form 
 The first task is to create a html form that clients can access to add new articles to the database.  
 
@@ -1694,7 +1735,22 @@ Commonly used sanitization methods are daisy chained together:
 ```.escape()```: used to remove HTML characters (such as < and " ) from a string. 
 
 #### Validation Results
-As well as sending messages within the form object / body, express validator also bundles the results into a validation result object
+As well as sending messages within the form object / body, express validator also bundles the results of your validations into a ```validationResult ``` object that can be requested and used by other functions.
+
+```js
+(req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        // There are errors. Render form again with sanitized values/errors messages.
+        // Error messages can be returned in an array using `errors.array()`.
+        }
+    else {
+        // Data from form is valid.
+    }
+}
+```
 
 
 ## Bootstrap

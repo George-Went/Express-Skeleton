@@ -1,5 +1,5 @@
 var BookInstance = require('../models/bookinstance');
-var Book = reuqire('../models/book');
+var Book = require('../models/book');
 
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
@@ -53,10 +53,6 @@ exports.bookinstance_create_get = function(req, res, next) {
 };
 
 // Handle BookInstance create on POST.
-exports.bookinstance_create_post = function(req, res) {
-    // res.send('NOT IMPLEMENTED: BookInstance create POST');
-};
-
 exports.bookinstance_create_post = [
 
     // Validate fields

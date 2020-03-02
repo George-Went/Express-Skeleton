@@ -818,20 +818,41 @@ exports.genre_list = function(req, res, next) {
 };
 ```
 
+
+
+
+
+
+
+
+
 ## Controllers and asynchronous requests
 
 Most of the methods used within express are asynchronus by design:  
-- specify an operation to peform (```Please add these two variables```)
-- specify a callback (```I will say "done" when i have added the two numbers```)
+- specify an operation to peform (```Please add these two variables```)  
+
+- specify a callback (```I will say "done" when i have added the two numbers```)  
+
 - method is called and run (```The answer to 1 + 1 is 2```)
 - callback is invoked when requested operation is complete (```operation [add two numbers] is "done"```)
 
 When a controller only needs to take one this works fine, however what if a user wants to take multiple requests - such as collecting multiple sets of data from a database or also dispalying images at the same time.  
+
 You could daisy chain the operators together so that function 1 calls function 2 and when function 2 is complete function 1 runs - with multiple requests this can become very messy an leads to complex nested code, known as ```callback hell```.
 
+>**Note:** Traditionally, code is executed in a linier fashion with one function/method taking place after the other (this is completly oversimplifying it). Due to the high level nature of node if we too this at its word, we would have massive daisy chains of code so that a database + a client and a server (and all the exception checks) - making it unreadable (for me at least)
 
 
+In order to manage our control flow more effectivly, we can use a popular npm module called ```async``` 
 
+### Async 
+There are 3 main methods used by async: 
+
+```async.parallel()```: to execute operations that are peformed in parallel.
+
+```async.series()```: for when operations need to be peformed in series.
+
+```async.waterfall```: for operations that must be run in series, with each operation depending on the results of a previous operation. 
 
 
 
@@ -1751,6 +1772,13 @@ As well as sending messages within the form object / body, express validator als
     }
 }
 ```
+
+
+
+
+
+
+
 
 
 ## Bootstrap

@@ -3,8 +3,9 @@ var Book = require('../models/book');
 var async = require('async');
 const validator = require('express-validator');
 
-
+// ================================================================
 // LIST OF GENRES
+// ================================================================
 // GET request for list of all Genre.
 exports.genre_list = function(req, res, next) {
     Genre.find()
@@ -17,8 +18,9 @@ exports.genre_list = function(req, res, next) {
       });
 
 };
-
+// ================================================================
 // GENRE DETAIL
+// ================================================================
 // GET request for one Genre.
 exports.genre_detail = function(req, res, next) {
     // The parallel function allows us to look for the genre id 
@@ -45,8 +47,9 @@ exports.genre_detail = function(req, res, next) {
         res.render('genre_detail', { title: 'Genre Detail', genre: results.genre, genre_books: results.genre_books } );
     });
 };
-
+// ================================================================
 // ADD NEW GENRE
+// ================================================================
 // Display Genre create form on GET.
 exports.genre_create_get = function(req, res, next) {     
     res.render('genre_form', { title: 'Create Genre' });

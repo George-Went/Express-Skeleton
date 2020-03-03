@@ -38,6 +38,7 @@ AuthorSchema
   return (this.date_of_death.getYear() - this.date_of_birth.getYear()).toString();
 });
 
+// Virtual for formatting the date of birth 
 AuthorSchema
 .virtual('date_of_birth_format')
 .get(function (){

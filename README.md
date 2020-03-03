@@ -1551,7 +1551,7 @@ We can also use the articles schema to save documents into certian collections t
 ## Forms 
 Forms can be used to collect infomation from a user which can then be submitted to the server for recording into a database or for further processing. 
 
-The main goals of a form is to: 
+#### The main goals of a form is to: 
 1. Dispaly the default form the first time it is requested by the user. This form can contain blank or pre-filled fields.
 2. Recive data submitted by the user, usually in a HTTP ```POST``` request.
 3. validate and sanitize the data. 
@@ -1562,6 +1562,9 @@ The main goals of a form is to:
 >**Note:** When looking at code for a form, the actual function dealing with form submission can be quite small, what makes up the bulk of form submission (and complications that can occur due to form submission) is to do with making sure that the data entered into a form is correct.  
 
 ### Creating a Form 
+
+> 1. Dispaly the default form the first time it is requested by the user. This form can contain blank or pre-filled fields.
+
 The first task is to create a html form that clients can access to add new articles to the database.  
 
 ```add_articles.pug```
@@ -1609,6 +1612,9 @@ app.get('/articles/add', function(req, res){
 
 
 ### Getting a Response from client to server 
+
+> 2. Recive data submitted by the user, usually in a HTTP ```POST``` request.
+
 Before we can communicate from client to server to database, we can check the our form does actually send data from the client to the server. We can check this just by adding a console log that is run when a client processes a form. 
 
 >**Note:** app.post is our ```form-handler``` which is what is run when a user activates a ```submit``` element (the button).
@@ -1711,6 +1717,9 @@ article.save(
 ```
 
 ## Validating and Sanitization
+
+> 3. validate and sanitize the data. 
+
 While we can write our own checks to form validation, we can also use pre-exisitng middleware. ```express-validator``` is a commonly used npm dependancy that provides a number of useful methods form the sanitization and validation of client input.
 
 You can install it using:  
@@ -1773,6 +1782,9 @@ As well as sending messages within the form object / body, express validator als
 }
 ```
 
+Once we've dealt with our sanitisation, we can start to deal with the users data (providing its correct)
+
+### Dealing with form data  (errors in submitted forms)
 
 
 
@@ -1781,4 +1793,86 @@ As well as sending messages within the form object / body, express validator als
 
 
 
-## Bootstrap
+
+> 4. If any data is invalid, re-display the form with error messages
+
+One of the main issues that people come across with forms is what happens when it goes wrong, thankfully we can use the object ```validationResult``` as a way to check for all of the above checks we made for our form.
+
+Our code for checking errors in the author controller is:
+
+```js
+  // assign the requested data from our validation results to the var 'error'
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) { // (if errors is not empty )
+      // There are errors. Render form again with sanitized values/errors messages.
+      res.render('author_form', { 
+          title: 'Create Author', 
+          author: req.body, 
+          errors: errors.array()
+      });
+      return;
+  }
+```
+
+### Working with the form data 
+Now that we have our correct form data, we can start to work with it, whether it just be sitting client side on the users machine, or needing to be sent to a database located on another server. 
+
+> 5. If all data is valid, peform the required form actions, such as saving data to a database, sending an email or modifying the ented data to produce a result. 
+
+For anything that just still runs client side, we can run our operations here
+
+
+In terms of the authorController class, we need to move this into our noSQL database.
+Our first step is to wrap up the form data into a variable that we can use to submit to the database. This is where our model ```author.js``` comes in. 
+
+```author.js``` simplified 
+```js
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var moment = require('moment');
+
+var AuthorSchema = new Schema(
+  {
+    first_name: {type: String, required: true, max: 100},
+    family_name: {type: String, required: true, max: 100},
+    date_of_birth: {type: Date},
+    date_of_death: {type: Date},
+  }
+);
+
+//Export model
+module.exports = mongoose.model('Author', AuthorSchema);
+```
+
+back in our authorController class, we can assign our exported mongoose model ```Author``` to the variable author, allowing us to save data to the model using mongooses ```.save()``` function:
+
+```js
+else {
+    // Create an Author object with escaped and trimmed data.
+    var author = new Author(
+        {
+            first_name: req.body.first_name,
+            family_name: req.body.family_name,
+            date_of_birth: req.body.date_of_birth,
+            date_of_death: req.body.date_of_death
+        });
+    // save the form data to the linked database
+    author.save(function (err) {
+        if (err) { return next(err); }
+        // Successful - redirect to new author record.
+        res.redirect(author.url);
+    });
+}
+```
+
+6. Once all actions are complete, redirect a user to another page, or notify the user that the task has been complete. 
+
+As you might have seen in the above code, once the function to save our form data to the database completes, the controller sends a response ```res``` to redirect the user back to the author url page - thereby showing the user that the author has been created in the database. 
+
+
+
+
+
+
+

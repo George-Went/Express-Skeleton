@@ -104,6 +104,9 @@ exports.bookinstance_create_post = [
     }
 ]
 
+
+
+
 // Display BookInstance delete form on GET.
 exports.bookinstance_delete_get = function(req, res) {
     res.send('NOT IMPLEMENTED: BookInstance delete GET');
@@ -113,6 +116,8 @@ exports.bookinstance_delete_get = function(req, res) {
 exports.bookinstance_delete_post = function(req, res) {
     res.send('NOT IMPLEMENTED: BookInstance delete POST');
 };
+
+
 
 // Display BookInstance update form on GET.
 exports.bookinstance_update_get = function(req, res) {

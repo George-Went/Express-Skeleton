@@ -44,7 +44,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/catalog', catalogRouter);  // Add catalog routes to middleware chain.
+app.use('/catalog', catalogRouter);  
+// Add catalog routes to middleware chain.
 // If we map to a certian route, any route in the .js file
 // will become /catalog/<route_defined> (/ becomes /catalog)
 

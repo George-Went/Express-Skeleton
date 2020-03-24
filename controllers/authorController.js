@@ -30,8 +30,9 @@ exports.author_list = function(req, res, next) {
 
 
 
-
-// AUTHOR DETAIL --------------------------------------------------------------
+// ================================================================
+// AUTHOR DETAIL 
+// ================================================================
 // Display detail page for a specific Author.
 exports.author_detail = function(req, res, next) {
     async.parallel({
@@ -109,7 +110,8 @@ exports.author_create_post = [
         // If there are errors in the form  ----------------
         if (!errors.isEmpty()) {
             // There are errors. Render form again with sanitized values/errors messages.
-            res.render('author_form', { 
+            res.render('author_form', {
+
                 title: 'Create Author', 
                 author: req.body, 
                 errors: errors.array()
@@ -142,8 +144,14 @@ exports.author_create_post = [
 
 
 
+
+
+
+
+
+
 // ================================================================
-// DELETE AN AUTHOR ---------------------------------------------------
+// DELETE AN AUTHOR 
 // ================================================================
 // Display Author delete form on GET.
 exports.author_delete_get = function(req, res, next) {
@@ -205,6 +213,13 @@ exports.author_delete_post = function(req, res, next) {
         }
     });
 };
+
+
+
+
+
+
+
 
 
 // UPDATE AUTHOR -------------------------------------------------------------

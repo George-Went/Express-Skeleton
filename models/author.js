@@ -12,7 +12,9 @@ var AuthorSchema = new Schema(
   }
 );
 
+
 // Virtual - These are not stored in the Database but can be used to
+
 // concatonate database results 
 
 // Virtual for author's full name

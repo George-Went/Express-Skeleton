@@ -231,6 +231,17 @@ app.listen(3000, function(){
 
 ```
 
+>**Note:**  
+If you get:  
+```
+events.js:183
+throw er; // Unhandled 'error' event
+ ```
+It means that something else is running on the currently defined port.
+
+
+
+
 # Templating Engines
 
 One of the main issues with node is that writing HTML and CSS code directly into a javascript ```.get``` function is that it can be hard to tell when the js ends and the HTML begins. 
@@ -1876,3 +1887,33 @@ As you might have seen in the above code, once the function to save our form dat
 
 
 
+
+
+
+
+## Uploading Files
+
+When a user makes a POST Request for a website you have to endcode data that forms the body of the request in some way so that it cant be accessed by outside sources other than the server and the client. 
+
+### HTML Form encoding 
+With HTML forms there are threee types of attribure value that can be assigned tom a form. 
+
+* **application/x-www-form-urlencoded:** Default. All characters are encoded before sent (spaces are converted to "+" symbols, and special characters are converted to ASCII HEX values)
+
+* **multipart/form-data:** No characters are encoded. This value is required when you are using forms that have a file upload control
+
+* **text/plain:** Spaces are converted to "+" symbols, but no special characters are encoded
+
+>**Note:** text/plain is not used often due to security concernes, with forms that are processing text data, you should always strive to use encoded data. 
+
+
+
+
+
+
+
+## TODO
+
+1. Find out how to use HTML instead of pug 
+2. Work out multipart files formtatting - express streams? 
+3. 

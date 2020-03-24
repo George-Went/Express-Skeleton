@@ -3,6 +3,9 @@ var Book = require('../models/book');
 var async = require('async');
 const validator = require('express-validator');
 
+
+
+
 // ================================================================
 // LIST OF GENRES
 // ================================================================
@@ -18,6 +21,11 @@ exports.genre_list = function(req, res, next) {
       });
 
 };
+
+
+
+
+
 // ================================================================
 // GENRE DETAIL
 // ================================================================
@@ -47,6 +55,12 @@ exports.genre_detail = function(req, res, next) {
         res.render('genre_detail', { title: 'Genre Detail', genre: results.genre, genre_books: results.genre_books } );
     });
 };
+
+
+
+
+
+
 // ================================================================
 // ADD NEW GENRE
 // ================================================================
@@ -109,15 +123,64 @@ exports.genre_create_post =  [
     }
   ];
 
+
+
+
+
+
+
+// ================================================================
+// DELETE A GENRE 
+// ================================================================
 // Display Genre delete form on GET.
-exports.genre_delete_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Genre delete GET');
+exports.genre_delete_get = function(req, res, next) {
+
+    //res.send('NOT IMPLEMENTED: Genre delete GET');
+    //parallel fucntion to find the author and his books in the database 
+    async.parallel({
+      genre: function(callback) {
+          Genre.findById(req.params.id).exec(callback)
+      },
+      genre_books: function(callback) {
+        Book.find({ 'genre': req.params.id }).exec(callback)
+      },
+  	}, function(err, results) {
+		// If no genre exists with the name 
+		if (err) { return next(err); }
+		if (results.genre==null) { // No results.
+			res.redirect('/catalog/genre');
+		}
+        // Successful, so render.
+		res.render('genre_delete', { 
+          title: 'Delete Genre', 
+          genre: results.genre, 
+          genre_books: results.genre_books } );  
+		});
 };
 
 // Handle Genre delete on POST.
 exports.genre_delete_post = function(req, res) {
     res.send('NOT IMPLEMENTED: Genre delete POST');
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Display Genre update form on GET.
 exports.genre_update_get = function(req, res) {

@@ -98,7 +98,10 @@ exports.book_create_get = function(req, res, next) {
         },
     }, function(err, results){
         if (err) {return next(err); }
-        res.render('book_form', { title: 'Create Book', authors: results.authors, genres: results.genres });
+        res.render('book_form', { 
+            title: 'Create Book', 
+            authors: results.authors, 
+            genres: results.genres });
     });
     
 };
@@ -185,15 +188,88 @@ exports.book_create_post = [
     }
 ];
 
+
+
+
+
+// ================================================================
+// DELETE BOOK 
+// ================================================================
+
 // Display book delete form on GET.
-exports.book_delete_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Book delete GET');
+exports.book_delete_get = function(req, res, next) {
+    //res.send('NOT IMPLEMENTED: Book delete GET');
+
+    // Get all authors and genres, which we can use for adding to our book.
+    async.parallel({
+        authors: function(callback) {
+            Author.find(callback);
+        },
+        genres: function(callback) {
+            Genre.find(callback);
+        },
+    }, function(err, results){
+        // If no book exists with name
+        if (err) {return next(err); }
+        res.render('book_delete', { 
+            title: 'Delete Book', 
+            authors: results.authors, 
+            genres: results.genres });
+    });    
+
+
 };
 
 // Handle book delete on POST.
-exports.book_delete_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Book delete POST');
+exports.book_delete_post = function(req, res, next) {
+    //res.send('NOT IMPLEMENTED: Book delete POST');
+
+    async.parallel({
+        genre: function(callback) {
+          Genre.findById(req.body.genreid).exec(callback)
+        },
+        genre_books: function(callback) {
+          Genre.find({ 'genre': req.body.genreid }).exec(callback)
+        },
+
+    }, function(err, results) {
+        if (err) { return next(err); }
+
+        // Success
+        if (results.authors_books.length > 0) {
+            // Genre has books. Render in same way as for GET route.
+            res.render('genre_delete', { 
+                title: 'Delete Genre', 
+                genre: results.genre, 
+                genre_books: results.genre_books 
+                });
+            return;
+        }
+        else {
+            // Genre has no books. Delete object and redirect to the list of geners.
+            Genre.findByIdAndRemove(req.body.genreid, function deleteGenre(err){
+                if (err) { return next(err); }
+                // Success - go to author list
+                res.redirect('/catalog/genre')
+            })
+        }
+    });
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

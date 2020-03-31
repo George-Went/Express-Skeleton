@@ -134,4 +134,12 @@ router.get('/bookinstance/:id', book_instance_controller.bookinstance_detail);
 // GET request for list of all BookInstance.
 router.get('/bookinstances', book_instance_controller.bookinstance_list);
 
+
+
+// GET file upload
+router.get('/file_upload', book_controller.file_upload_get);
+
+//POST file upload 
+router.post('/file_upload', book_controller.file_upload_post);
+
 module.exports = router;

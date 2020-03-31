@@ -1,5 +1,6 @@
 const createError = require('http-errors');
 const express = require('express'); 
+const fileUpload = require('express-fileupload');
 const path = require('path');         // path module proveds utilities for working with files and directories
 
 var cookieParser = require('cookie-parser');
@@ -41,6 +42,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(fileUpload());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -48,26 +50,6 @@ app.use('/catalog', catalogRouter);
 // Add catalog routes to middleware chain.
 // If we map to a certian route, any route in the .js file
 // will become /catalog/<route_defined> (/ becomes /catalog)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -89,7 +71,7 @@ app.use(function(err, req, res, next) {
 
 // Start Server
 app.listen(3000, function(){
-  console.log('server started on prt 3000')
+  console.log('server started on port 3000')
 });
 
 

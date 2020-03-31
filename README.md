@@ -1900,11 +1900,16 @@ With HTML forms there are threee types of attribure value that can be assigned t
 
 * **application/x-www-form-urlencoded:** Default. All characters are encoded before sent (spaces are converted to "+" symbols, and special characters are converted to ASCII HEX values)
 
-* **multipart/form-data:** No characters are encoded. This value is required when you are using forms that have a file upload control
+* **multipart/form-data:** No characters are encoded. This value is required when you are using forms that have a file upload control 
+
+>**Note:** This is the one we want to use when uploading files rather than text/string data 
 
 * **text/plain:** Spaces are converted to "+" symbols, but no special characters are encoded
 
 >**Note:** text/plain is not used often due to security concernes, with forms that are processing text data, you should always strive to use encoded data. 
+
+
+
 
 
 

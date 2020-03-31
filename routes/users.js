@@ -1,20 +1,15 @@
-var express = require('express'); //imports express
-var router = express.Router();    //imports express router functions
+var express = require('express');
+var router = express.Router();
 
-/* --- GET users listing. ---  */
-
-//app.method(path, handler(request, response, next))
+/* GET users listing. */
 router.get('/', function(req, res, next) {
-  
-  res.send('hello users pages');
+  res.send('respond with a resource');
 });
 
-//the router.get/ is extended from the app.js specified route
-
-//app.method(path, handler(request, response, next))
-router.get('/cool', function(req, res, next) {
-  
-  res.send('test');
+/* GET Hello page. */
+router.get('/hello', function(req, res, next) {
+  res.render('index', { title: 'Hello' });
 });
+
 
 module.exports = router;

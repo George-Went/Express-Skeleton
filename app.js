@@ -1,71 +1,59 @@
+const createError = require('http-errors');
+const express = require('express'); 
+const fileUpload = require('express-fileupload');
+const path = require('path');         // path module proveds utilities for working with files and directories
 
-//Importing 
-var createError = require('http-errors') 
-var express = require('express'); 
-var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
-//Import routes 
+//Route Imports  --------------------------------------------
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var exampleRouter = require('./routes/example');
+var catalogRouter = require('./routes/catalog'); 
 
-//generate express application  
+//Set up default mongoose connection
+var mongoDB = 'mongodb://localhost/nodedb';
+mongoose.connect(mongoDB, { useNewUrlParser: true });
+
+var db = mongoose.connection;
+
+// Check default Connection + bind connection to event notification
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  // we're connected!
+  console.log('connected to nodedb')
+
+});
+
+
+// Initilise express application  
 var app = express();
 
-app.get('/', function(req, res){
-  res.send('Hello World');
-})
 
-app.listen(3000, function(){
-  console.log('server started on prt 3000')
-})
-
-
-
-
-
-
-
-
-
-
-//Setting up Middleware 
-
-  // Views / Templates 
-app.set('views', path.join(__dirname, 'views')); 
+// Load View Engine
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-  // Third party packages 
 app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(fileUpload());
 
-  //accessing /public
-app.use(express.static(path.join(__dirname, './public')));
-
-//Routes 
-//app.use('/', indexRouter);
-app.use('/example', exampleRouter);
+app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/catalog', catalogRouter);  
+// Add catalog routes to middleware chain.
+// If we map to a certian route, any route in the .js file
+// will become /catalog/<route_defined> (/ becomes /catalog)
 
 
 
-
-
-
-// Extra Functions (igonre)
-// -- basic page display 
-app.get('/hello', function(req, res){
-  res.render("test.html");
-});
-// -------
-
-
-
-//add error handling 
-
-// catch 404 and forward to error handler
+// Catch 404 
 app.use(function(req, res, next) {
   next(createError(404));
 });
@@ -81,11 +69,10 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-
-//add logging (if not using pre-existing logging packages)
-app.listen(3000, () => {
-  console.log('Example app listening on port 3000!')
-  console.log(path.join(__dirname, 'views'))
+// Start Server
+app.listen(3000, function(){
+  console.log('server started on port 3000')
 });
 
-module.exports = app;
+
+

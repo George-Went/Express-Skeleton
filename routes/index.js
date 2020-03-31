@@ -1,22 +1,17 @@
-var express = require('express');  //imports express libraries 
-var router = express.Router();     //defines express.router as router
+var express = require('express');
+var router = express.Router();
+
+// /* GET home page. */
+// router.get('/', function(req, res, next) {
+//   res.render('index', { title: 'Express' });
+// });
 
 
-/* GET root (index) page. */
-router.get('/', function(req, res, next){
-   res.render('index', {title: 'Express'});
+
+// GET home page.
+router.get('/', function(req, res) {
+  res.redirect('/catalog'); 
+  //This redirects all index urls to /catalog
+  //Meaning /author/create becomes /catalog/author/create
 });
-
-
-router.get('/:name/:address', function(req,res) {
-   var name = req.params.name;
-   var address = req.params.address;
-   res.render('index', {title: name, address: address});
-});
-
-router .get('/test', function(req,res, next){
-   res.render('test')
-});
-
-//export this router to use in our app.js
 module.exports = router;

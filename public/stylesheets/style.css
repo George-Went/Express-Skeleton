@@ -1,9 +1,5 @@
-body {
-   padding: 40px;
-   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-   background-color: lightgrey;
-}
-
-h1 {
-   color: black;
+.sidebar-nav {
+  margin-top: 20px;
+  padding: 0;
+  list-style: none;
 }
